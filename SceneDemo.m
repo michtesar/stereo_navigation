@@ -1,9 +1,10 @@
 function SceneDemo
 
 AssertOpenGL;
-InitializeMatlabOpenGL(1);
 screenid=max(Screen('Screens'));
+InitializeMatlabOpenGL(1);
 [win , winRect] = Screen('OpenWindow', screenid);
+ar = winRect(4) / winRect(3);
 
 Screen('BeginOpenGL', win);
 
@@ -11,7 +12,7 @@ lighting();
 
 glMatrixMode(GL_PROJECTION);
 glLoadIdentity;
-gluPerspective(25, 1/winRect(4) / winRect(3), 0.1, 100);
+gluPerspective(25, 1/ar, 0.1, 100);
 glMatrixMode(GL_MODELVIEW);
 glLoadIdentity;
 gluLookAt(0, 0, 10, 0, 0, 0, 0, 1, 0);
@@ -85,4 +86,9 @@ glLightfv(GL.LIGHT0, GL.POSITION, lightZeroPosition);
 glLightfv(GL.LIGHT0, GL.DIFFUSE, lightZeroColor);
 glLightf(GL.LIGHT0, GL.CONSTANT_ATTENUATION, 0.1);
 glLightf(GL.LIGHT0, GL.LINEAR_ATTENUATION, 0.05);
+end
+
+function drawsphere(size, x, y, z, texture)
+global GL
+
 end
