@@ -4,7 +4,6 @@ screenid=max(Screen('Screens'));
 InitializeMatlabOpenGL(1);
 [win , winRect] = Screen('OpenWindow', screenid);
 ar = winRect(4) / winRect(3);
-
 Screen('BeginOpenGL', win);
 
 lighting();
@@ -17,19 +16,21 @@ glLoadIdentity;
 gluLookAt(0, 4, -10, 0, 0, 0, 0, 1, 0);
 glClearColor(0, 0, 0, 0);
 glPushMatrix;
-
 glClear;
 
-drawsphere(1, -2.5, 0, 2, [1, 0, 0, 0]);
-drawsphere(1, 3.5, 0, -3, [0, 0, 1, 0]);
-
-drawtorus(2, 10, -2, 0, -2, 'ball_04.jpg', 100);
-
-glPopMatrix;
+try
+    drawfloor();
+    drawsphere(1, -2.5, 0, 2, [1, 0, 0, 0]);
+    drawsphere(1, 3.5, 0, -3, [0, 0, 1, 0]);
+    drawarena();
+    drawsky();
+    glPopMatrix;
+catch
+    sca;
+end
 
 Screen('EndOpenGL', win);
 Screen('Flip', win);
-
 KbWait;
 sca;
 end
@@ -48,8 +49,8 @@ glTexParameterf(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.REPEAT);
 glTexParameterf(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.NEAREST);
 glTexParameterf(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.NEAREST);
 glTexEnvf(GL.TEXTURE_ENV, GL.TEXTURE_ENV_MODE, GL.COMBINE);
-glTexImage2D(GL.TEXTURE_2D, 0, GL.RGB, img_size(1), img_size(2),...
-    0, GL.RGB, GL.UNSIGNED_BYTE, img_data);
+glTexImage2D(GL.TEXTURE_2D, 0, GL.RGBA, img_size(1), img_size(2),...
+    0, GL.BGR, GL.UNSIGNED_BYTE, img_data);
 end
  
 function lighting()
@@ -68,7 +69,7 @@ end
 
 function drawsphere(size, x, y, z, color)
 global GL
-readtexture('ball_01.jpg');
+readtexture('ball.jpg');
 glMaterialfv(GL.FRONT, GL.DIFFUSE, color);
 glTranslatef(x, y, z);
 qobj = gluNewQuadric();
@@ -78,15 +79,36 @@ gluSphere(qobj, size, 80, 80);
 glDisable(GL.TEXTURE_2D);
 end
 
-function drawtorus(inner, outter, x, y, z, texture, angle)
+function drawarena()
 global GL
-readtexture(texture);
+readtexture('wall.jpg');
 glMaterialfv(GL.FRONT, GL.DIFFUSE, [1, 1, 1, 0]);
-glTranslatef(x, y, z);
-glRotatef(angle, 1, 0, 0);
 qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL.TRUE);
 glEnable(GL.TEXTURE_2D);
-glutSolidTorus(inner, outter, 30, 30);
+gluCylinder(qobj, 2, 2, 3, 30, 30);
+glDisable(GL.TEXTURE_2D);
+end
+
+function drawfloor()
+global GL
+readtexture('grass.jpg');
+glMaterialfv(GL.FRONT, GL.DIFFUSE, [0, 1, 0, 0]);
+glRotatef(100, 1, 0, 0);
+qobj = gluNewQuadric();
+gluQuadricTexture(qobj, GL.TRUE);
+glEnable(GL.TEXTURE_2D);
+gluDisk(qobj, 0, 5, 30, 30);
+glDisable(GL.TEXTURE_2D);
+end
+
+function drawsky()
+global GL
+readtexture('sky.bmp');
+glMaterialfv(GL.FRONT, GL.DIFFUSE, [1, 1, 1, 0]);
+qobj = gluNewQuadric();
+gluQuadricTexture(qobj, GL.TRUE);
+glEnable(GL.TEXTURE_2D);
+gluCylinder(qobj, 2, 2, 3, 30, 30);
 glDisable(GL.TEXTURE_2D);
 end
