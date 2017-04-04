@@ -4,20 +4,12 @@ AssertOpenGL;
 screenid=max(Screen('Screens'));
 InitializeMatlabOpenGL(1);
 [win , winRect] = Screen('OpenWindow', screenid);
-ar=winRect(4)/winRect(3);
+ar = winRect(4) / winRect(3);
 
 Screen('BeginOpenGL', win);
 
-glEnable(GL_LIGHTING);
-glEnable(GL_LIGHT0);
-glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE,GL_TRUE);
-glEnable(GL_DEPTH_TEST);
-lightZeroPosition = [10., 4., 10., 1.];
-lightZeroColor = [0.8, 1.0, 0.8, 1.0];
-glLightfv(GL_LIGHT0, GL_POSITION, lightZeroPosition);
-glLightfv(GL_LIGHT0, GL_DIFFUSE, lightZeroColor);
-glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0.1);
-glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.05);
+lighting();
+
 glMatrixMode(GL_PROJECTION);
 glLoadIdentity;
 gluPerspective(25,1/ar,0.1,100);
@@ -80,4 +72,18 @@ glTexParameterf(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.NEAREST);
 glTexEnvf(GL.TEXTURE_ENV, GL.TEXTURE_ENV_MODE, GL.DECAL);
 glTexImage2D(GL.TEXTURE_2D, 0, GL.RGB, img_size(1), img_size(2),...
     0, GL.RGB, GL.UNSIGNED_BYTE, img_data);
- end
+end
+ 
+function lighting()
+global GL
+glEnable(GL.LIGHTING);
+glEnable(GL.LIGHT0);
+glLightModelfv(GL.LIGHT_MODEL_TWO_SIDE, GL.TRUE);
+glEnable(GL.DEPTH_TEST);
+lightZeroPosition = [10., 4., 10., 1.];
+lightZeroColor = [0.8, 1.0, 0.8, 1.0];
+glLightfv(GL.LIGHT0, GL.POSITION, lightZeroPosition);
+glLightfv(GL.LIGHT0, GL.DIFFUSE, lightZeroColor);
+glLightf(GL.LIGHT0, GL.CONSTANT_ATTENUATION, 0.1);
+glLightf(GL.LIGHT0, GL.LINEAR_ATTENUATION, 0.05);
+end
