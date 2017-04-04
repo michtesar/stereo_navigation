@@ -37,18 +37,18 @@ glTranslatef(-1.5,0,0);
 qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL_TRUE);
 glEnable(GL_TEXTURE_2D);
-gluSphere(qobj, 0.6, 80, 80);
+gluSphere(qobj, 1, 80, 80);
 glDisable(GL_TEXTURE_2D);
 
 readtexture('ball_03.jpg');
 
 color = [1.0, 0.0, 0.0, 1.0];
 glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
-glTranslatef(2.5,0,4);
+glTranslatef(3.5,0,-3);
 qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL_TRUE);
 glEnable(GL_TEXTURE_2D);
-gluSphere(qobj, 1.5, 80, 80);
+gluSphere(qobj, 1, 80, 80);
 glDisable(GL_TEXTURE_2D);
 
 glPopMatrix;
