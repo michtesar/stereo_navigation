@@ -1,4 +1,12 @@
-function SceneDemo
+function AEdist2017_v4
+% Generate main scene demo for active stereoscopy
+% paradigm. Only need PsychToolbox installed.
+% For enabling stereoscopy it is needed to add
+% new Screen parameters as in SpinningCube demo is.
+% Michael Tesar
+% 2017
+
+% Enable Psychtoolbox and OpenGL
 AssertOpenGL;
 screenid=max(Screen('Screens'));
 InitializeMatlabOpenGL(1);
@@ -6,8 +14,10 @@ InitializeMatlabOpenGL(1);
 ar = winRect(4) / winRect(3);
 Screen('BeginOpenGL', win);
 
+% Light the scene
 lighting();
 
+% Create projection and camera
 glMatrixMode(GL.PROJECTION);
 glLoadIdentity;
 gluPerspective(25, 1/ar, 0.1, 100);
@@ -15,15 +25,28 @@ glMatrixMode(GL_MODELVIEW);
 glLoadIdentity;
 gluLookAt(0, 4, -10, 0, 0, 0, 0, 1, 0);
 glClearColor(0, 0, 0, 0);
-glPushMatrix;
 glClear;
 
 try
-    drawfloor();
-    drawsphere(1, -2.5, 0, 2, [1, 0, 0, 0]);
-    drawsphere(1, 3.5, 0, -3, [0, 0, 1, 0]);
-    drawarena();
-    drawsky();
+    % Draw all elements in screen
+    glPushMatrix;
+        drawsphere(-2.5, -0.1, 0.0, [1, 0, 0, 0]);
+    glPopMatrix;
+    
+    glPushMatrix;
+        drawsphere(1.8, -0.1, -2.0, [1, 1, 1, 0]);
+    glPopMatrix;
+    
+    glPushMatrix;
+        drawfloor();
+    glPopMatrix;
+    
+    glPushMatrix;
+        drawarena();
+    glPopMatrix;
+    
+    glPushMatrix;
+        drawmark();
     glPopMatrix;
 catch
     sca;
@@ -31,7 +54,17 @@ end
 
 Screen('EndOpenGL', win);
 Screen('Flip', win);
+Screen('BeginOpenGL', win);
+
 KbWait;
+
+Screen('EndOpenGL', win);
+sca;
+
+% Wait for any key press
+KbWait;
+
+% Clear the screen and quit
 sca;
 end
 
@@ -60,22 +93,21 @@ glEnable(GL.LIGHT0);
 glLightModelfv(GL.LIGHT_MODEL_TWO_SIDE, GL.TRUE);
 glEnable(GL.DEPTH_TEST);
 lightZeroPosition = [10., 4., 10., 1.];
-lightZeroColor = [0.8, 1.0, 0.8, 1.0];
+lightZeroColor = [1.0, 1.0, 1.0, 1.0];
 glLightfv(GL.LIGHT0, GL.POSITION, lightZeroPosition);
 glLightfv(GL.LIGHT0, GL.DIFFUSE, lightZeroColor);
 glLightf(GL.LIGHT0, GL.CONSTANT_ATTENUATION, 0.1);
 glLightf(GL.LIGHT0, GL.LINEAR_ATTENUATION, 0.05);
 end
 
-function drawsphere(size, x, y, z, color)
+function drawsphere(x, y, z, color)
 global GL
-readtexture('ball.jpg');
 glMaterialfv(GL.FRONT, GL.DIFFUSE, color);
 glTranslatef(x, y, z);
 qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL.TRUE);
 glEnable(GL.TEXTURE_2D);
-gluSphere(qobj, size, 80, 80);
+gluSphere(qobj, 0.5, 80, 80);
 glDisable(GL.TEXTURE_2D);
 end
 
@@ -85,30 +117,31 @@ readtexture('wall.jpg');
 glMaterialfv(GL.FRONT, GL.DIFFUSE, [1, 1, 1, 0]);
 qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL.TRUE);
+glRotatef(90, 1, 0, 0);
+glTranslatef(0, 0, -2);
 glEnable(GL.TEXTURE_2D);
-gluCylinder(qobj, 2, 2, 3, 30, 30);
+gluCylinder(qobj, 8, 8, 30, 30, 30);
 glDisable(GL.TEXTURE_2D);
 end
 
 function drawfloor()
 global GL
-readtexture('grass.jpg');
-glMaterialfv(GL.FRONT, GL.DIFFUSE, [0, 1, 0, 0]);
-glRotatef(100, 1, 0, 0);
+readtexture('floor.jpg');
+glMaterialfv(GL.FRONT, GL.DIFFUSE, [1, 1, 1, 0]);
+glRotatef(90, 1, 0, 0);
+glTranslatef(0.0, -1.5, 0.1);
 qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL.TRUE);
 glEnable(GL.TEXTURE_2D);
-gluDisk(qobj, 0, 5, 30, 30);
+gluDisk(qobj, 0, 5, 50, 50);
 glDisable(GL.TEXTURE_2D);
 end
 
-function drawsky()
+function drawmark()
 global GL
-readtexture('sky.bmp');
-glMaterialfv(GL.FRONT, GL.DIFFUSE, [1, 1, 1, 0]);
+glMaterialfv(GL.FRONT, GL.DIFFUSE, [1, 1, 0, 0]);
 qobj = gluNewQuadric();
-gluQuadricTexture(qobj, GL.TRUE);
-glEnable(GL.TEXTURE_2D);
-gluCylinder(qobj, 2, 2, 3, 30, 30);
-glDisable(GL.TEXTURE_2D);
+glTranslatef(0.0, 1.0, 3.0);
+glRotatef(90, 1, 0, 0);
+gluCylinder(qobj, 0.25, 0.25, 1, 30, 30);
 end
