@@ -1,4 +1,4 @@
-function AEdist2017_v4
+function AEdist2017_v4(stereo)
 % Generate main scene demo for active stereoscopy
 % paradigm. Only need PsychToolbox installed.
 % For enabling stereoscopy it is needed to add
@@ -6,11 +6,15 @@ function AEdist2017_v4
 % Michael Tesar
 % 2017
 
+if nargin == 0
+    stereo = 0;
+end
+
 % Enable Psychtoolbox and OpenGL
 AssertOpenGL;
-screenid=max(Screen('Screens'));
+screenid = max(Screen('Screens'));
 InitializeMatlabOpenGL(1);
-[win , winRect] = Screen('OpenWindow', screenid);
+[win, winRect] = PsychImaging('OpenWindow', screenid, 0, [], [], [], stereo);
 ar = winRect(4) / winRect(3);
 Screen('BeginOpenGL', win);
 
@@ -54,15 +58,12 @@ end
 
 Screen('EndOpenGL', win);
 Screen('Flip', win);
-Screen('BeginOpenGL', win);
 
 KbWait;
 
+Screen('BeginOpenGL', win);
 Screen('EndOpenGL', win);
 sca;
-
-% Wait for any key press
-KbWait;
 
 % Clear the screen and quit
 sca;
