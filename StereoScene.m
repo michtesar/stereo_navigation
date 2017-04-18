@@ -16,6 +16,7 @@ KbName('UnifyKeynames');
 RestrictKeysForKbCheck(KbName('ESCAPE'));
 
 screenid = max(Screen('Screens'));
+Screen('Preference', 'SkipSyncTests', 1);
 
 try
     InitializeMatlabOpenGL;
@@ -34,12 +35,10 @@ try
         glMatrixMode(GL.MODELVIEW);
         glLoadIdentity;
         glLightfv(GL.LIGHT0,GL.POSITION,[ 1 2 3 0 ]);
-        gluLookAt(0,0,10,0,0,0,0,1,0);
-        glClearColor(0,0,0,0);
-        glClear;    
+        glLightModelfv(GL.LIGHT_MODEL_TWO_SIDE, GL.TRUE);
+        glClearColor(0,0,0,0);   
         glEnable(GL.LIGHTING);
         glEnable(GL.DEPTH_TEST);
-        glLightfv(GL.LIGHT0,GL.POSITION,[ 1 2 3 0 ]);
     Screen('EndOpenGL', win);
     
     while ~KbCheck
@@ -48,16 +47,16 @@ try
             Screen('BeginOpenGL', win);
                 glMatrixMode(GL.MODELVIEW);
                 glLoadIdentity;
-                gluLookAt(-0.4 + view * 3.8, 4, -10, 0, 0, 0, 0, 1, 0);
+                gluLookAt(-0.4 + view * 0.8, 4, -10, 0, 0, 0, 0, 1, 0);
                 glClear;
                 
                 % Draw the whole arena here
                 glPushMatrix;
-                    drawsphere(0, 0, 0, [1, 0, 0, 0]);
+                    drawsphere(-1, 0, 0, [1, 0, 0, 0]);
                 glPopMatrix;
 
                 glPushMatrix;
-                    drawsphere(0, 0, 0, [1, 1, 1, 0]);
+                    drawsphere(1, 0, -2, [1, 1, 1, 0]);
                 glPopMatrix;
 
                 glPushMatrix;
@@ -70,9 +69,7 @@ try
 
                 glPushMatrix;
                     drawmark();
-                glPopMatrix;
-                
-                glLightfv(GL.LIGHT0,GL.POSITION,[ 1 2 3 0 ]);
+                glPopMatrix; 
             
                 Screen('EndOpenGL', win);
         end
@@ -80,10 +77,8 @@ try
         Screen('Flip', win);
     end
     sca;
-    RestrictKeysForKbCheck([]);
 catch
-    sca;
-    RestrictKeysForKbCheck([]);
+    sca; 
     psychrethrow(psychlasterror);
 end
 
@@ -113,9 +108,7 @@ glMaterialfv(GL.FRONT, GL.DIFFUSE, color);
 glTranslatef(x, y, z);
 qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL.TRUE);
-glEnable(GL.TEXTURE_2D);
 gluSphere(qobj, 0.5, 80, 80);
-glDisable(GL.TEXTURE_2D);
 end
 
 function drawarena()
@@ -126,8 +119,9 @@ qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL.TRUE);
 glRotatef(90, 1, 0, 0);
 glTranslatef(0, 0, -2);
+
 glEnable(GL.TEXTURE_2D);
-gluCylinder(qobj, 8, 8, 30, 30, 30);
+    gluCylinder(qobj, 8, 8, 30, 30, 30);
 glDisable(GL.TEXTURE_2D);
 end
 
@@ -139,8 +133,9 @@ glRotatef(90, 1, 0, 0);
 glTranslatef(0.0, -1.5, 0.1);
 qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL.TRUE);
+
 glEnable(GL.TEXTURE_2D);
-gluDisk(qobj, 0, 5, 50, 50);
+    gluDisk(qobj, 0, 5, 50, 50);
 glDisable(GL.TEXTURE_2D);
 end
 
@@ -151,18 +146,4 @@ qobj = gluNewQuadric();
 glTranslatef(0.0, 1.0, 3.0);
 glRotatef(90, 1, 0, 0);
 gluCylinder(qobj, 0.25, 0.25, 1, 30, 30);
-end
-
-function lighting()
-global GL
-glEnable(GL.LIGHTING);
-glEnable(GL.LIGHT0);
-glLightModelfv(GL.LIGHT_MODEL_TWO_SIDE, GL.TRUE);
-glEnable(GL.DEPTH_TEST);
-lightZeroPosition = [10., 4., 10., 1.];
-lightZeroColor = [1.0, 1.0, 1.0, 1.0];
-glLightfv(GL.LIGHT0, GL.POSITION, lightZeroPosition);
-glLightfv(GL.LIGHT0, GL.DIFFUSE, lightZeroColor);
-glLightf(GL.LIGHT0, GL.CONSTANT_ATTENUATION, 0.1);
-glLightf(GL.LIGHT0, GL.LINEAR_ATTENUATION, 0.05);
 end
