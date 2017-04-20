@@ -1,4 +1,5 @@
-# Stereo-vision navigation paradigm
+# Stereo-vision navigation paradigm
+
 Electrophysiology navigation paradigm in stereoscopic rendered scene.
 
 ## Prerequisities
@@ -13,7 +14,7 @@ There is no way to use classic window handling function, callback function and/o
 
 Key thing is here to generate slightly different camera angles for left and right eye buffer. And it has to be enabled stereo mode 1 as active-stereoscopy.
 
-```
+```matlab
 AssertOpenGL;
 screenid = max(Screen('Screens'));
 InitializeMatlabOpenGL;
@@ -24,7 +25,7 @@ PsychImaging('PrepareConfiguration');
 
 In any cases OpenGL code has to put inbetween:
 
-```
+```matlab
 Screen('BeginOpenGL', win);
 ...
 Screen('EndOpenGL', win);
@@ -37,12 +38,12 @@ Screen('EndOpenGL', win);
     * Unfortunately it is pretty HW resources hard and it could occur in testing version
 
 # TODO
-- [] Optimize textures
-- [] Fix the measurments (get it to real values like cm)
-- [] Prepare EEG tag system
-- [] Get the main loop
-- [] Write logger
-- [] Compile as MATLAB application and release it on GitHub
+- [ ] Optimize textures
+- [ ] Fix the measurments (get it to real values like cm)
+- [ ] Prepare EEG tag system
+- [ ] Get the main loop
+- [ ] Write logger
+- [ ] Compile as MATLAB application and release it on GitHub
 
 # Paradigm overview
 
@@ -54,4 +55,4 @@ In the arena is placed a yellow small cylinder named as marker or reference-poin
 
 Scene is generated as followings:
 
-![Scene design](https://github.com/neuropacabra/Stereo/releases)
+![Scene design](https://github.com/neuropacabra/Stereo/blob/documentation/scene_design.png?raw=true)
