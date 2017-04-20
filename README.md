@@ -53,6 +53,8 @@ Paradigm consists of textured arena made from floor (ground disk with `floor.jpg
 
 In the arena is placed a yellow small cylinder named as marker or reference-point. Then two main particles in arena are placed - two non-textured spheres. One is red, second is white.
 
+Demo [here](https://www.youtube.com/watch?v=1V2lfM1x0gE)
+
 Scene is generated as followings:
 
 ![Scene design](https://github.com/neuropacabra/Stereo/blob/documentation/scene_design.png?raw=true)
