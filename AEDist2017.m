@@ -10,9 +10,8 @@ AssertOpenGL;
 Screen('Preference', 'SkipSyncTests', 1);
 InitializeMatlabOpenGL;
 PsychImaging('PrepareConfiguration');
-[win, winRect] = PsychImaging('OpenWindow', 0, 0, [], [], [],...
-    stereoMode, 0);
-
+ [win, winRect] = PsychImaging('OpenWindow', 0, 0, [], [], [],...
+     stereoMode, 0);
 
 % Set the keyboard
 KbName('UnifyKeyNames');
@@ -20,6 +19,11 @@ leftKey = KbName('LeftArrow');
 rightKey = KbName('RightArrow');
 escapeKey = KbName('ESCAPE');
 
+% Hide cursor and prevent from writing into console
+HideCursor();
+ListenChar(2);
+
+% OpenGL part
 Screen('BeginOpenGL', win);
     ar = RectHeight(winRect) / RectWidth(winRect);
     glViewport(0, 0, RectWidth(winRect), RectHeight(winRect));
@@ -94,13 +98,17 @@ for epoch = 1:5
         elseif find(keyCode, 1) == escapeKey
             ListenChar(0);
             ShowCursor();
-            Screen('CloseAll');
+            sca;
             break;
         end 
     end
 
 end
 
+ListenChar(0);
+ShowCursor();
+Priority(0);
+KbQueueRelease;
 sca;
 end
 
