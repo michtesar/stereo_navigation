@@ -10,8 +10,8 @@ AssertOpenGL;
 Screen('Preference', 'SkipSyncTests', 1);
 InitializeMatlabOpenGL;
 PsychImaging('PrepareConfiguration');
- [win, winRect] = PsychImaging('OpenWindow', 0, 0, [], [], [],...
-     stereoMode, 0);
+[win, winRect] = PsychImaging('OpenWindow', 0, 0, [], [], [],...
+    stereoMode, 0);
 
 % Set the keyboard
 KbName('UnifyKeyNames');
@@ -83,16 +83,16 @@ for epoch = 1:5
     end
 
     Screen('DrawingFinished', win, 2);
-    Screen('Flip', win);
+    startTime = Screen('Flip', win);
 
     while 1
         [~, timeSecs, keyCode] = KbCheck;
         if find(keyCode, 1) == leftKey
-            fprintf('Pressed: Left key, RT: %d ms\n', timeSecs*1000);
+            fprintf('Pressed: Left key, RT: %0.2f sec\n', timeSecs - startTime);
             KbReleaseWait;
             break;
         elseif find(keyCode, 1) == rightKey
-            fprintf('Pressed: Right key, RT: %d ms\n', timeSecs*1000);
+            fprintf('Pressed: Left key, RT: %0.2f sec\n', timeSecs - startTime);
             KbReleaseWait;
             break;
         elseif find(keyCode, 1) == escapeKey
@@ -102,7 +102,11 @@ for epoch = 1:5
             break;
         end 
     end
-
+    
+    % Blank screen
+    Screen('Flip', win);
+    WaitSecs(0.5);
+    
 end
 
 ListenChar(0);

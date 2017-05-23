@@ -1,4 +1,4 @@
-raw_data = readtable('AEDist2017_source.xlsx');
+raw_data = readtable('/Users/michael/Documents/Github/Stereo/source/AEDist2017_source.xlsx');
 source = raw_data(~isnan(raw_data.RedX), :);
 
 try
@@ -27,18 +27,19 @@ try
             source.RedY(event)], dotSize, redDotColor, [], 2);
         Screen('DrawDots', window, [source.WhiteY(event),...
             source.WhiteY(event)], dotSize, whiteDotColor, [], 2);
-        Screen('Flip', window);
+        
+        startTime = Screen('Flip', window);
         
         % HACK - Chytré pou¾ití KbCheck na kontrolu stiknuté klávesy
         % asi by s hodilo si to nìkam zapsat na pøí¹tì (blog)
         while 1
             [keyIsDown, timeSecs, keyCode] = KbCheck;
             if find(keyCode, 1) == leftKey
-                disp('LEFT');
+                fprintf('Pressed: Left key, RT: %0.2f ms\n', timeSecs - startTime);
                 KbReleaseWait;
                 break;
             elseif find(keyCode, 1) == rightKey
-                disp('RIGHT');
+                fprintf('Pressed: Right key, RT: %0.2f ms\n', timeSecs - startTime);
                 KbReleaseWait;
                 break;
             elseif find(keyCode, 1) == escapeKey
