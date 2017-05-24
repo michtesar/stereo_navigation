@@ -3,8 +3,8 @@ function AEDist2017
 global GL;
 
 % Switch to stereo mode by
-stereoMode = 0; %stereo;
-stereoViews = 0; %stereo;
+stereoMode = 0; %1 stereo;
+stereoViews = 0; %1 stereo;
 
 AssertOpenGL;
 Screen('Preference', 'SkipSyncTests', 1);
@@ -22,6 +22,24 @@ escapeKey = KbName('ESCAPE');
 % Hide cursor and prevent from writing into console
 HideCursor();
 ListenChar(2);
+
+
+% Intruction
+instructionText = sprintf(['Hello, thank you for participation\n',...
+    'in AEDist2017 active stereoscopy paradigm.\nThis ',...
+    'is a demo of futher full paradigm setup.\n\nPress ANY ',...
+    'key to continue.']);
+Screen('TextSize', win, 40);
+Screen('TextStyle', win, 0);
+
+DrawFormattedText(win,instructionText,'center','center',[255 255 255]);
+Screen('Flip', win);
+
+KbWait;
+
+% Blank screen before experiment
+Screen('Flip', win);
+WaitSecs(0.5);
 
 % OpenGL part
 Screen('BeginOpenGL', win);
