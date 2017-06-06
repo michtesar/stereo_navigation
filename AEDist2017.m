@@ -2,9 +2,11 @@ function AEDist2017
 
 global GL;
 
+eyesDistance = 0.04;
+
 % Switch to stereo mode by
-stereoMode = 0; %1 stereo;
-stereoViews = 0; %1 stereo;
+stereoMode = 1; %1 stereo;
+stereoViews = 1; %1 stereo;
 
 AssertOpenGL;
 Screen('Preference', 'SkipSyncTests', 1);
@@ -22,7 +24,6 @@ escapeKey = KbName('ESCAPE');
 % Hide cursor and prevent from writing into console
 HideCursor();
 ListenChar(2);
-
 
 % Intruction
 instructionText = sprintf(['Hello, thank you for participation\n',...
@@ -49,7 +50,7 @@ Screen('BeginOpenGL', win);
     glEnable(GL.LIGHT0);
     glMatrixMode(GL.PROJECTION);
     glLoadIdentity;
-    gluPerspective(25, 1/ar, 0.1, 100);
+    gluPerspective(45, 1/ar, 0.3, 100);
     glMatrixMode(GL.MODELVIEW);
     glLoadIdentity;
     glLightfv(GL.LIGHT0,GL.POSITION,[ 1 2 3 0 ]);
@@ -59,29 +60,34 @@ Screen('BeginOpenGL', win);
     glEnable(GL.DEPTH_TEST);
 Screen('EndOpenGL', win);
 
-for epoch = 1:5
-    
+for epoch = 1:100
+    % Random coordinate
+    redX = 0.2;%randi([-2 2], 1);
+    redZ = 0.2;%randi([-2 2], 1);
+    whiteX = 0.1;%randi([-2 2], 1);
+    whiteZ = 0.1;%randi([-2 2], 1);
+
     for view = 0:stereoViews
         Screen('SelectStereoDrawbuffer', win, view);
-        Screen('BeginOpenGL', win);
+        Screen('BeginOpenGL', win);       
             glMatrixMode(GL.MODELVIEW);
             glLoadIdentity;
-            gluLookAt(-0.4 + view * 0.8, 4, -10, 0, 0, 0, 0, 1, 0);
-            glClear;
-            
-            % Random coordinate
-            redX = randi([-2 2], 1);
-            redZ = randi([-2 2], 1);
-            whiteX = randi([-2 2], 1);
-            whiteZ = randi([-2 2], 1);
+            if view == 0
+                eyePosition = -0.08;
+            else
+                eyePosition = 0.08;
+            end
+            %gluLookAt(-0.4 + view * paralaxIndex, 4, -12, 0, 2, -2, 0, 1, 0);
+            gluLookAt(eyePosition * eyesDistance, 0.15, -0.7, 0, 0.15, -0.2, 0, 1, 0 );
+            glClear;   
             
             % Draw the whole arena here
             glPushMatrix;
-                drawsphere(redX, 0, redZ, [1, 0, 0, 0]);
+                drawsphere(redX, -0.1, redZ, [1, 0, 0, 1]);
             glPopMatrix;
 
             glPushMatrix;
-                drawsphere(whiteX, 0, whiteZ, [1, 1, 1, 0]);
+                drawsphere(whiteX, -0.1, whiteZ, [1, 1, 1, 1]);
             glPopMatrix;
 
             glPushMatrix;
@@ -97,7 +103,6 @@ for epoch = 1:5
             glPopMatrix; 
 
         Screen('EndOpenGL', win);
-
     end
 
     Screen('DrawingFinished', win, 2);
@@ -107,10 +112,14 @@ for epoch = 1:5
         [~, timeSecs, keyCode] = KbCheck;
         if find(keyCode, 1) == leftKey
             fprintf('Pressed: Left key, RT: %0.2f sec\n', timeSecs - startTime);
+            eyesDistance = eyesDistance - 0.01;
+            disp(eyePosition * eyesDistance)
             KbReleaseWait;
             break;
         elseif find(keyCode, 1) == rightKey
             fprintf('Pressed: Left key, RT: %0.2f sec\n', timeSecs - startTime);
+            eyesDistance = eyesDistance + 0.01;
+            disp(eyePosition * eyesDistance)
             KbReleaseWait;
             break;
         elseif find(keyCode, 1) == escapeKey
@@ -158,7 +167,7 @@ glMaterialfv(GL.FRONT, GL.DIFFUSE, color);
 glTranslatef(x, y, z);
 qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL.TRUE);
-gluSphere(qobj, 0.5, 80, 80);
+gluSphere(qobj, 0.03, 60, 60);
 end
 
 function drawarena()
@@ -171,7 +180,7 @@ glRotatef(90, 1, 0, 0);
 glTranslatef(0, 0, -2);
 
 glEnable(GL.TEXTURE_2D);
-    gluCylinder(qobj, 8, 8, 30, 30, 30);
+    gluCylinder(qobj, 0.5, 0.5, 30, 30, 30);
 glDisable(GL.TEXTURE_2D);
 end
 
@@ -193,7 +202,7 @@ function drawmark()
 global GL
 glMaterialfv(GL.FRONT, GL.DIFFUSE, [1, 1, 0, 0]);
 qobj = gluNewQuadric();
-glTranslatef(0.0, 1.0, 3.0);
+glTranslatef(0.0, 0.0, 0.5);
 glRotatef(90, 1, 0, 0);
-gluCylinder(qobj, 0.25, 0.25, 1, 30, 30);
+gluCylinder(qobj, 0.07, 0.07, 0.2, 30, 30);
 end
