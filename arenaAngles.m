@@ -1,12 +1,10 @@
-function AEDist2017
+function arenaAngles
 
 global GL;
 
 eyesDistance = 0.04;
-
-% Switch to stereo mode by
-stereoMode = 0; %1 stereo;
-stereoViews = 0; %1 stereo;
+stereoMode = 0; 
+stereoViews = 0;
 
 AssertOpenGL;
 Screen('Preference', 'SkipSyncTests', 1);
@@ -24,23 +22,6 @@ escapeKey = KbName('ESCAPE');
 % Hide cursor and prevent from writing into console
 HideCursor();
 ListenChar(2);
-
-% Intruction
-instructionText = sprintf(['Hello, thank you for participation\n',...
-    'in AEDist2017 active stereoscopy paradigm.\nThis ',...
-    'is a demo of futher full paradigm setup.\n\nPress ANY ',...
-    'key to continue.']);
-Screen('TextSize', win, 40);
-Screen('TextStyle', win, 0);
-
-DrawFormattedText(win,instructionText,'center','center',[255 255 255]);
-Screen('Flip', win);
-
-KbWait;
-
-% Blank screen before experiment
-Screen('Flip', win);
-WaitSecs(0.5);
 
 % OpenGL part
 Screen('BeginOpenGL', win);
@@ -61,35 +42,27 @@ Screen('BeginOpenGL', win);
 Screen('EndOpenGL', win);
 
 for epoch = 1:100
-    % Random coordinate
-    redX = 0.2;%randi([-2 2], 1);
-    redZ = 0.2;%randi([-2 2], 1);
-    whiteX = 0.1;%randi([-2 2], 1);
-    whiteZ = 0.1;%randi([-2 2], 1);
-
     for view = 0:stereoViews
         Screen('SelectStereoDrawbuffer', win, view);
         Screen('BeginOpenGL', win);       
             glMatrixMode(GL.MODELVIEW);
             glLoadIdentity;
-            if view == 0
-                eyePosition = -0.08;
-            else
-                eyePosition = 0.08;
-            end
-            %gluLookAt(-0.4 + view * paralaxIndex, 4, -12, 0, 2, -2, 0, 1, 0);
-            gluLookAt(eyePosition * eyesDistance, 0.15, -0.7, 0, 0.15, -0.2, 0, 1, 0 );
+            gluLookAt(1, 1, 1, 0, 0, 0, 0, 1, 0 );
             glClear;   
             
             % Draw the whole arena here
             glPushMatrix;
-                drawsphere(redX, -0.1, redZ, [1, 0, 0, 1]);
+                drawsphere(0.0, 0.0, -0.15, [1, 0, 0, 1]);
             glPopMatrix;
 
             glPushMatrix;
-                drawsphere(whiteX, -0.1, whiteZ, [1, 1, 1, 1]);
+                drawsphere(0.3, 0.0, -0.15, [1, 1, 1, 1]);
             glPopMatrix;
-
+            
+            glPushMatrix;
+                drawsphere(0.0, 0.0, 0.0, [0, 1, 0, 1]);
+            glPopMatrix;
+            
             glPushMatrix;
                 drawfloor();
             glPopMatrix;
@@ -177,10 +150,10 @@ glMaterialfv(GL.FRONT, GL.DIFFUSE, [1, 1, 1, 0]);
 qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL.TRUE);
 glRotatef(90, 1, 0, 0);
-glTranslatef(0, 0, -2);
+glTranslatef(0, 0, -0.25);
 
 glEnable(GL.TEXTURE_2D);
-    gluCylinder(qobj, 0.5, 0.5, 30, 30, 30);
+    gluCylinder(qobj, 0.5, 0.5, 0.25, 30, 30);
 glDisable(GL.TEXTURE_2D);
 end
 
@@ -189,12 +162,11 @@ global GL
 readtexture('source/floor.jpg');
 glMaterialfv(GL.FRONT, GL.DIFFUSE, [1, 1, 1, 0]);
 glRotatef(90, 1, 0, 0);
-glTranslatef(0.0, -1.5, 0.1);
 qobj = gluNewQuadric();
 gluQuadricTexture(qobj, GL.TRUE);
 
 glEnable(GL.TEXTURE_2D);
-    gluDisk(qobj, 0, 5, 50, 50);
+    gluDisk(qobj, 0, 0.5, 30, 30);
 glDisable(GL.TEXTURE_2D);
 end
 
@@ -202,7 +174,7 @@ function drawmark()
 global GL
 glMaterialfv(GL.FRONT, GL.DIFFUSE, [1, 1, 0, 0]);
 qobj = gluNewQuadric();
-glTranslatef(0.0, 0.0, 0.5);
+glTranslatef(0.0, 0.25, 0.48);
 glRotatef(90, 1, 0, 0);
-gluCylinder(qobj, 0.07, 0.07, 0.2, 30, 30);
+gluCylinder(qobj, 0.02, 0.02, 0.2, 30, 30);
 end
