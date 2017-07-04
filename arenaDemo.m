@@ -1,4 +1,4 @@
-function arenaAngles
+function arenaDemo
 % Weird axis
 % X - backwards (minus goes right, plus goes left)
 % Y - is up and down
@@ -52,8 +52,8 @@ Screen('BeginOpenGL', win);
     
     % Axes:
     %   Eyes - left/right = X, up/down = Y, close/far = Z
-    gluLookAt(0.0, 1.8, -0.5,...
-              0.0, 0.0, 0.0,...
+    gluLookAt(0.302, 0.125, -0.350,...
+              heightPoint, 0.0, viewPoint,...
               0, 1, 0);
     glClear;
     try
@@ -63,26 +63,26 @@ Screen('BeginOpenGL', win);
         % Show from where and where we look
         % In objects position are axes:
         %   left/right inverse = X, up/down = Y, close/far = Z
-        drawsphere(0.302, 0.125, -0.350, [0.0, 1.0, 0.0, 1.0]);
-        drawsphere(heightPoint, 0.0, viewPoint, [0.0, 1.0, 0.0, 1.0]);
+        %drawsphere(0.302, 0.125, -0.350, [0.0, 1.0, 0.0, 1.0]);
+        %drawsphere(heightPoint, 0.0, viewPoint, [0.0, 1.0, 0.0, 1.0]);
         
-        glLineWidth(6.0);
-        glBegin(GL.LINES);
-            glVertex3f(0.302, 0.125, -0.350);
-            glVertex3f(heightPoint, 0.0, viewPoint);
-        glEnd();
-        
-        glLineWidth(6.0);
-        glBegin(GL.LINES);
-            glVertex3f(0.5, 0.05, 0.0);
-            glVertex3f(-0.5, 0.05, 0.0);
-        glEnd();
-        
-        glLineWidth(6.0);
-        glBegin(GL.LINES);
-            glVertex3f(0.0, 0.05, 0.5);
-            glVertex3f(0.0, 0.05, -0.5);
-        glEnd();
+%         glLineWidth(6.0);
+%         glBegin(GL.LINES);
+%             glVertex3f(0.302, 0.125, -0.350);
+%             glVertex3f(heightPoint, 0.0, viewPoint);
+%         glEnd();
+%         
+%         glLineWidth(6.0);
+%         glBegin(GL.LINES);
+%             glVertex3f(0.5, 0.05, 0.0);
+%             glVertex3f(-0.5, 0.05, 0.0);
+%         glEnd();
+%         
+%         glLineWidth(6.0);
+%         glBegin(GL.LINES);
+%             glVertex3f(0.0, 0.05, 0.5);
+%             glVertex3f(0.0, 0.05, -0.5);
+%         glEnd();
         
         drawmark(0.017, 0.483);
         drawfloor();
@@ -116,7 +116,7 @@ glTexImage2D(GL.TEXTURE_2D, 0, GL.RGBA, img_size(1), img_size(2),...
 end
 
 function drawsphere(x, y, z, color)
-size = 0.03;
+size = 0.02;
 global GL
 glPushMatrix;
     glTranslatef(x, y, z);
