@@ -3,8 +3,13 @@ function arenaAngles
 % X - backwards (minus goes right, plus goes left)
 % Y - is up and down
 % Z - far or close the object
-% It apply only for sphere so far as know (CHECK THIS OUT)
 
+% TODO:
+%   [ ] Fix wrong coordinate system
+%   [ ] Read table and loop over trials
+%   [ ] Implement 346 degrees of camera pitch
+%   [ ] Logfile
+%   [ ] LPT integration
 RedX = -0.243;
 RedY = 0.014;
 RedZ = 0.339;
@@ -43,7 +48,7 @@ Screen('BeginOpenGL', win);
     
     viewPoint = computeview(CameraAngle);
     
-    gluLookAt(-0.302, 0.125, 0.350, viewPoint, 0.0, 0.125, 0, 1, 0);
+    gluLookAt(0.302, 0.125, 0.350, viewPoint, 0.0, 0.125, 0, 1, 0);
     glClear;
     glRotatef(90, 0, 1, 0);
     try
