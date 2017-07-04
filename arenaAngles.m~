@@ -10,7 +10,12 @@ function arenaAngles
 %   [ ] Implement 346 degrees of camera pitch
 %   [ ] Logfile
 %   [ ] LPT integration
-
+% RedX = -0.243;
+% RedY = 0.014;
+% RedZ = 0.339;
+% WhiteX = -0.111;
+% WhiteY = 0.014;
+% WhiteZ = 0.070;
 RedX = 0.243;
 RedY = 0.339;
 RedZ = 0.014;
@@ -35,7 +40,7 @@ Screen('BeginOpenGL', win);
     glEnable(GL.LIGHT0);
     glMatrixMode(GL.PROJECTION);
     glLoadIdentity;
-    gluPerspective(45, 1/ar, 0.03, 100);
+    gluPerspective(90, 1/ar, 0.03, 100);
     glLightfv(GL.LIGHT0, GL.POSITION, [1 2 3 4]);
     glLightModelfv(GL.LIGHT_MODEL_TWO_SIDE, GL.TRUE);
     glClearColor(0.0, 0.0, 0.0, 0.0);   
@@ -48,13 +53,17 @@ Screen('BeginOpenGL', win);
 	glLoadIdentity;
     
     viewPoint = computeview(CameraAngle);
-    gluLookAt(-0.302, 0.125, 0.350, viewPoint, 0.0, 0.125, 0, 1, 0);
-    glRotatef(90, 0, 1, 0);
+    
+    %gluLookAt(0.302, 0.125, 0.350, viewPoint, 0.0, 0.125, 0, 1, 0);
+    
+    gluLookAt(-0.302, 0.350, 0.125, viewPoint, 0.0, 0.125, 0, 1, 0);
     glClear;
+    glRotatef(90, 0, 1, 0);
+    
     try
-        drawsphere(-RedX, RedZ, RedY, [1.0, 0.0, 0.0, 1.0]);
-        drawsphere(-WhiteX, WhiteZ, WhiteY, [1.0, 1.0, 1.0, 1.0]);
-        drawmark(0.017, 0.483);
+        drawsphere(RedX, RedY, RedZ, [1.0, 0.0, 0.0, 1.0]);
+        drawsphere(WhiteX, WhiteY, WhiteZ, [1.0, 1.0, 1.0, 1.0]);
+        drawmark(-0.017, 0.483);
         drawfloor();
         drawarena();
     catch
