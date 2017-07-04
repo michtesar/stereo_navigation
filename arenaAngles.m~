@@ -40,10 +40,7 @@ Screen('EndOpenGL', win);
 Screen('BeginOpenGL', win);
     glMatrixMode(GL.MODELVIEW);
 	glLoadIdentity;
-    
-    viewPoint = computeview(CameraAngle);
-    
-    gluLookAt(-0.302, 0.125, 0.350, viewPoint, 0.0, 0.125, 0, 1, 0);
+    gluLookAt(-0.302, 0.125, 0.350, 0.462, 0.0, 0.125, 0, 1, 0);
     glClear;
     glRotatef(90, 0, 1, 0);
     try
@@ -148,5 +145,5 @@ b = a * sind(beta) / sind(alpha);
 
 offset = -0.350-(-0.5);
 
-viewPoint = b+offset;
+vie
 end
