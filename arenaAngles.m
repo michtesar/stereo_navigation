@@ -35,7 +35,7 @@ Screen('BeginOpenGL', win);
     glEnable(GL.LIGHT0);
     glMatrixMode(GL.PROJECTION);
     glLoadIdentity;
-    gluPerspective(45, 1/ar, 0.03, 100);
+    gluPerspective(25, 1/ar, 0.03, 100);
     glLightfv(GL.LIGHT0, GL.POSITION, [1 2 3 4]);
     glLightModelfv(GL.LIGHT_MODEL_TWO_SIDE, GL.TRUE);
     glClearColor(0.0, 0.0, 0.0, 0.0);   
@@ -46,7 +46,6 @@ Screen('EndOpenGL', win);
 Screen('BeginOpenGL', win);
     glMatrixMode(GL.MODELVIEW);
 	glLoadIdentity;
-    
     viewPoint = computeview(CameraAngle);
     gluLookAt(-0.302, 0.125, 0.350, viewPoint, 0.0, 0.125, 0, 1, 0);
     glRotatef(90, 0, 1, 0);
