@@ -10,6 +10,7 @@ function arenaAngles
 %   [ ] Implement 346 degrees of camera pitch
 %   [ ] Logfile
 %   [ ] LPT integration
+%   [ ] Check viewPointHeight if computes camera pitch OK
 
 RedX = 0.243;
 RedY = 0.339;
@@ -47,7 +48,8 @@ Screen('BeginOpenGL', win);
     glMatrixMode(GL.MODELVIEW);
 	glLoadIdentity;
     viewPoint = computeview(CameraAngle);
-    gluLookAt(-0.302, 0.125, 0.350, viewPoint, 0.0, 0.125, 0, 1, 0);
+    heightPoint = viewPointHeight(346, viewPoint);
+    gluLookAt(-0.302, heightPoint, 0.350, viewPoint, 0.0, 0.125, 0, 1, 0);
     glRotatef(90, 0, 1, 0);
     glClear;
     try
@@ -151,4 +153,11 @@ alpha = 180 - (90 + beta);
 b = a * sind(beta) / sind(alpha);
 offset = -0.350-(-0.5);
 viewPoint = b+offset;
+end
+
+function heightPoint = viewPointHeight(angle, viewPoint)
+c = viewPoint;
+beta = 360 - angle;
+alpha = 180-(90+beta);
+heightPoint = c * sind(beta)/sind(alpha);
 end
