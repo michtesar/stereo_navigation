@@ -16,7 +16,7 @@ Screen('Preference', 'SkipSyncTests', 1);
 InitializeMatlabOpenGL;
 PsychImaging('PrepareConfiguration');
 [win, winRect] = PsychImaging('OpenWindow', 0, 0, [], [], [], 0, 0);
-initialize;
+initialize(30);
 
 %introduction;
 
@@ -28,7 +28,6 @@ Screen('BeginOpenGL', win);
         drawviewline; 
         drawaxes;
         drawmark(0.017, 0.483);
-        drawfloor;
         drawarena;
     catch
         psychlasterror;

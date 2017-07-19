@@ -1,4 +1,14 @@
-function initialize
+function initialize(fieldOfView)
+% INITIALIZE initilize a OpenGL with lighting
+%   and perspective for PsychToolBox enviroment.
+% Input:
+%   fieldOfView - double - field of visual angle
+%                 default is 30 degreese
+%   
+if nargin < 0
+    fieldOfView = 30;
+end
+
 global win;
 global GL;
 global winRect;
@@ -10,7 +20,7 @@ Screen('BeginOpenGL', win);
     glEnable(GL.LIGHT0);
     glMatrixMode(GL.PROJECTION);
     glLoadIdentity;
-    gluPerspective(30, 1/ar, 0.03, 100);
+    gluPerspective(fieldOfView, 1/ar, 0.03, 100);
     glLightfv(GL.LIGHT0, GL.POSITION, [1 2 3 4]);
     glLightModelfv(GL.LIGHT_MODEL_TWO_SIDE, GL.TRUE);
     glClearColor(0.0, 0.0, 0.0, 0.0);   

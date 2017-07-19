@@ -1,4 +1,8 @@
 function readtexture(source)
+% READTEXTURE is main function for reading textures
+%   for any objects in arena. It assumes it is .pjg
+%   color image to bind it to glu objects.
+%
 global GL
 img_data = imread(source);
 img_size = size(img_data);

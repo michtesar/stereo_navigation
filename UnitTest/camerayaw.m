@@ -1,4 +1,4 @@
-function heightPoint = viewPointHeight(angle, viewPoint)
+function heightPoint = camerayaw(angle, viewPoint)
 c = viewPoint;
 beta = angle;
 alpha = 180-(90+beta);

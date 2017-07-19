@@ -1,4 +1,4 @@
-function viewPoint = computeview(angle)
+function viewPoint = camerapitch(angle)
 % Using sine law to compute AAS triangle
 % then add a lower part of circle x axe
 % to get the view point.

@@ -1,4 +1,8 @@
 function introduction
+% INTRODUCTION draws a initial screen instructions
+%   with simple formatting to center on black
+%   background with white text. Waits to press any key.
+%
 screens = Screen('Screens');
 screenNumber = max(screens);
 w = Screen('OpenWindow', screenNumber, 0);

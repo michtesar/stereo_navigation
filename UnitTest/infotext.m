@@ -1,4 +1,8 @@
 function infotext
+% INFOTEXT is debugging tool for vizualization of
+%   instructions for unit testing and some print out
+%   of important variables in real time.
+%
 global win;
 global winRect;
 
