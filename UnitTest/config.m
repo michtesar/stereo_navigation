@@ -5,4 +5,4 @@
 global topView;
 
 drawLines = false;
-topView = true;
+topView = false;
