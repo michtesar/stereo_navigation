@@ -17,7 +17,7 @@ Screen('Preference', 'SkipSyncTests', 1);
 InitializeMatlabOpenGL;
 PsychImaging('PrepareConfiguration');
 [win, winRect] = PsychImaging('OpenWindow', 0, 0, [], [], [], 0, 0);
-initialize(30);
+initialize(viewAngle);
 
 %introduction;
 

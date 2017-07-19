@@ -5,13 +5,14 @@ function infotext
 %
 global win;
 global winRect;
+global viewAngle;
 
 nTrial = 1;
 RedX = 1.1; RedY = 0.245; RedZ = 12.471;
 WhiteX = -2.45; WhiteY = 0.002; WhiteZ = 3.147;
 ReferenceX = 0.5; ReferenceY = 0.018;
 CameraX = -0.5; CameraY = -2.1; CameraZ = 0.158;
-CameraPitch = 146; CameraRoll = -20; ViewAngle = 90;
+CameraPitch = 146; CameraRoll = -20;
 
 Screen('TextSize', win, 20);
 text = sprintf('TRIAL INFO\n==========\nTrial\t %d \n\n', nTrial);
@@ -23,8 +24,8 @@ text = strcat(text, sprintf('\n\nReference X: %0.3f\nReference Y: %0.3f\n',...
     ReferenceX, ReferenceY));
 text = strcat(text, sprintf('\n\nCamera X: %0.3f\nCamera Y: %0.3f\nCamera Z: %0.3f\n',...
     CameraX, CameraY, CameraZ));
-text = strcat(text, sprintf('\nCamera pitch: %0.3f\nCamera Roll: %0.3f\nView Angle: %0.3f\n',...
-    CameraPitch, CameraRoll, ViewAngle));
+text = strcat(text, sprintf('\nCamera pitch: %0.3f\nCamera roll: %0.3f\nView angle: %0.3f\n',...
+    CameraPitch, CameraRoll, viewAngle));
 DrawFormattedText(win, text, 40, 40, [255 255 0], [], [], [], 1.2);
 fprintf('%s \n\n', text);
 
