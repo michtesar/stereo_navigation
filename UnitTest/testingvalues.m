@@ -18,7 +18,7 @@ RedZ = 0.014;
 % White ball
 WhiteX = 0.111; 
 WhiteY = 0.070; 
-WhiteZ = 0.014;
+WhiteZ = -0.014;
 
 % Camera angle
 cameraAngle = 134;
@@ -34,4 +34,4 @@ ReferenceX = 0.017;
 ReferenceY = 0.483;
 
 % Trial info
-nTrial = 1
+nTrial = 1;

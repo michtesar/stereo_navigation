@@ -32,7 +32,7 @@ while 1
                 drawviewline; 
                 drawaxes;
             end
-            drawmark(-0.017, 0.483);
+            drawmark;
             drawarena;
         catch
             psychlasterror;
