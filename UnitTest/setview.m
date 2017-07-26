@@ -26,7 +26,7 @@ heightPoint = camerayaw(cameraYaw, viewPoint);
 if topView
     gluLookAt(0.0, 1.8, -0.5, 0.0, 0.0, 0.0, 0, 1, 0);
 else
-   gluLookAt(-CameraX, CameraZ, CameraY, -heightPoint, 0.0,...
+   gluLookAt(-CameraX, CameraZ, CameraY, heightPoint, 0.0,...
        viewPoint, 0, 1, 0);
 end
 glClear;
