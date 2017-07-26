@@ -5,7 +5,7 @@ function drawviewline
 %
 global GL;
 global heightPoint viewPoint;
-global CameraX CameraY CameraZ
+global CameraX CameraY CameraZ;
 
 % Draw camera lines
 drawsphere(-CameraX, CameraZ, CameraY, [0.0, 1.0, 0.0, 1.0]);
