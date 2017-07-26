@@ -5,10 +5,7 @@
 
 global RedX RedY RedZ
 global WhiteX WhiteY WhiteZ
-global cameraAngle cameraYaw
-global CameraX CameraY CameraZ
-global ReferenceX ReferenceY
-global nTrial
+global cameraAngle
 
 % Red ball
 RedX = 0.243; 
@@ -22,16 +19,10 @@ WhiteZ = 0.014;
 
 % Camera angle
 cameraAngle = 134;
-cameraYaw = -346; % it is 346 degrees
+cameraYaw = 13; % it is 346 degrees
 
 % Camera coordinates
 CameraX = 0.302;
 CameraY = -0.350;
 CameraZ = 0.125;
 
-% Reference mark
-ReferenceX = 0.017;
-ReferenceY = 0.483;
-
-% Trial info
-nTrial = 1

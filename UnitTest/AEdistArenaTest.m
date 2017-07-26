@@ -26,13 +26,13 @@ while 1
     Screen('BeginOpenGL', win);
         setview(cameraAngle);
         try
-            drawsphere(RedX, RedZ, RedY, [1.0, 0.0, 0.0, 1.0]);
-            drawsphere(WhiteX, WhiteZ, WhiteY, [1.0, 1.0, 1.0, 1.0]);
+            drawsphere(-RedX, RedZ, RedY, [1.0, 0.0, 0.0, 1.0]);
+            drawsphere(-WhiteX, WhiteZ, WhiteY, [1.0, 1.0, 1.0, 1.0]);
             if drawLines
                 drawviewline; 
                 drawaxes;
             end
-            drawmark(0.017, 0.483);
+            drawmark(-0.017, 0.483);
             drawarena;
         catch
             psychlasterror;

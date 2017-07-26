@@ -14,6 +14,7 @@ function setview(cameraAngle)
 global GL;
 global heightPoint viewPoint;
 global topView;
+global CameraX CameraY CameraZ
 
 glMatrixMode(GL.MODELVIEW);
 glLoadIdentity;
@@ -24,7 +25,7 @@ heightPoint = camerayaw(346, viewPoint);
 if topView
     gluLookAt(0.0, 1.8, -0.5, 0.0, 0.0, 0.0, 0, 1, 0);
 else
-   gluLookAt(0.302, 0.125, -0.350,heightPoint, 0.0,...
+   gluLookAt(-CameraX, CameraZ, CameraY, heightPoint, 0.0,...
        viewPoint, 0, 1, 0);
 end
 glClear;
