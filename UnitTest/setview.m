@@ -1,4 +1,4 @@
-function setview(cameraAngle)
+function setview(cameraAngle, view)
 % SETVIEW sets a view point of where to look
 %   and also specify camera position and where
 %   to look at.
@@ -20,13 +20,20 @@ global cameraYaw
 glMatrixMode(GL.MODELVIEW);
 glLoadIdentity;
 
+if view == 0
+    eyePosition = -0.08;
+else
+    eyePosition = 0.08;
+end
+eyesDistance = 0.05;
+
 viewPoint = camerapitch(cameraAngle);
 heightPoint = camerayaw(cameraYaw, viewPoint);
 
 if topView
-    gluLookAt(0.0, 1.8, -0.5, 0.0, 0.0, 0.0, 0, 1, 0);
+    gluLookAt(eyePosition * eyesDistance, 1.8, -0.5, 0.0, 0.0, 0.0, 0, 1, 0);
 else
-   gluLookAt(-CameraX, CameraZ, CameraY, heightPoint, 0.0,...
+   gluLookAt(-CameraX + eyesDistance, CameraZ, CameraY, heightPoint, 0.0,...
        viewPoint, 0, 1, 0);
 end
 glClear;

@@ -27,27 +27,24 @@ ListenChar(2);
 
 KbName('UnifyKeyNames');
 while 1
-    for view = 0:1
-        Screen('SelectStereoDrawbuffer', win, view);
-        Screen('BeginOpenGL', win);
-        setview(cameraAngle, view);
-            try
-                drawsphere(-RedX, RedZ, RedY, [1.0, 0.0, 0.0, 1.0]);
-                drawsphere(-WhiteX, WhiteZ, WhiteY, [1.0, 1.0, 1.0, 1.0]);
-                if drawLines
-                    drawviewline; 
-                    drawaxes;
-                end
-                drawmark;
-                drawarena;
-            catch
-                psychlasterror;
-                sca;
+    
+    Screen('BeginOpenGL', win);
+        setview(cameraAngle);
+        try
+            drawsphere(-RedX, RedZ, RedY, [1.0, 0.0, 0.0, 1.0]);
+            drawsphere(-WhiteX, WhiteZ, WhiteY, [1.0, 1.0, 1.0, 1.0]);
+            if drawLines
+                drawviewline; 
+                drawaxes;
             end
-        Screen('EndOpenGL', win);
-        infotext; 
-    end
-    Screen('DrawingFinished', win, 2);
+            drawmark;
+            drawarena;
+        catch
+            psychlasterror;
+            sca;
+        end
+    Screen('EndOpenGL', win);
+    infotext;
     Screen('Flip', win);
     startSecs = GetSecs;
     
@@ -60,8 +57,7 @@ while 1
        fprintf('"%s" typed at time %.3f seconds\n',...
            KbName(keyCode), timeSecs - startSecs); 
        if keyCode == KbName('ESCAPE')
-           ListenChar(0);
-           ShowCursor();
+           
            break;
        elseif keyCode == KbName('v')
            topView = ~topView;
@@ -72,7 +68,5 @@ while 1
     end
     Screen('Flip', win);
 end
-ListenChar(0);
-ShowCursor();
 sca;
 end
