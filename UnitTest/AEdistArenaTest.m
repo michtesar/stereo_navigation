@@ -1,4 +1,4 @@
-function AEdistArenaTest
+function AEdistArenaTest(stereo)
 % AEDistArenaTest is unit test of 2D AEDist2017 experiment
 %
 % Coordinate system:
@@ -9,6 +9,12 @@ function AEdistArenaTest
 global win;
 global winRect;
 
+if nargin == 0
+    stereo = 0;
+else
+    stereo = 1;
+end
+
 testingvalues;
 config;
 
@@ -16,7 +22,7 @@ AssertOpenGL;
 Screen('Preference', 'SkipSyncTests', 1);
 InitializeMatlabOpenGL;
 PsychImaging('PrepareConfiguration');
-[win, winRect] = PsychImaging('OpenWindow', 0, 0, [], [], [], 1, 0);
+[win, winRect] = PsychImaging('OpenWindow', 0, 0, [], [], [], stereo, 0);
 initialize(viewAngle);
 
 % Hide cursor and prevent from writing into console
@@ -27,7 +33,7 @@ ListenChar(2);
 
 KbName('UnifyKeyNames');
 while 1
-    for view = 0:1
+    for view = 0:stereo
         Screen('SelectStereoDrawbuffer', win, view);
         Screen('BeginOpenGL', win);
         setview(cameraAngle, view);
