@@ -11,8 +11,6 @@ global winRect;
 
 if nargin == 0
     stereo = 0;
-else
-    stereo = 1;
 end
 
 run config\testingvalues;
