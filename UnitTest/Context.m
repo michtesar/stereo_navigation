@@ -11,7 +11,7 @@ classdef Context
        redX;
        redY;
        redZ;
-       sourceTable = 'source/AEDist2017_source.csv';
+       sourceTable = 'config/AEDist2017_source.csv';
        nTrial;
     end
     
