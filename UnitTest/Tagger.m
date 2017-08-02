@@ -21,7 +21,7 @@ classdef Tagger
            %    follows: COM3 port, 115200 baud rate and 8 bits.
            %    Else you can specify your Biosemi setup.
            %
-           if nargin < 1
+           if nargin == 0
                obj.port = 'COM3';
                obj.baudRate = '115200';
                obj.dataBits = 8;
@@ -34,7 +34,7 @@ classdef Tagger
                 obj.eeg = serial(obj.port, 'BAUD', obj,baudRate,...
                     'DataBits', obj.dataBits);
            catch ME
-               error(ME);
+               disp(ME);
                warning('Cannot initialize communcation with Biosemi.');
            end
        end
@@ -48,7 +48,7 @@ classdef Tagger
            try
                 fwrite(obj.eeg, tag); 
            catch ME
-               error(ME);
+               disp(ME);
                warning('Cannot send tag to Biosemi!');
            end
        end
@@ -60,7 +60,7 @@ classdef Tagger
           try
               fclose(obj.eeg);
           catch ME
-              error(ME);
+              disp(ME);
               warning('Cannot uninitialize Biosemi, port is still running! Restart your PC');
           end
        end

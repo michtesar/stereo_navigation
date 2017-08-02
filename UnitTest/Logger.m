@@ -39,7 +39,7 @@ classdef Logger
            try
                fclose(obj.fileId);
            catch ME
-               warning(ME)
+               disp(ME)
            end
         end
         
