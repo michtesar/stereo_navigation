@@ -6,7 +6,7 @@ function drawarena()
 global GL;
 height = 0.7;
 size = 0.5;
-readtexture('texture/wall.jpg');
+readtexture('source/texture/wall.jpg');
 
 % Draw walls
 glPushMatrix;
@@ -21,7 +21,7 @@ glPushMatrix;
 glPopMatrix;
 
 % Draw floor
-readtexture('texture/floor.jpg');
+readtexture('source/texture/floor.jpg');
 glPushMatrix;
     glRotatef(90, 1, 0, 0);
     glMaterialfv(GL.FRONT, GL.DIFFUSE, [1, 1, 1, 0]);
