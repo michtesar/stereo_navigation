@@ -7,8 +7,7 @@ classdef Logger
     % Default name is used as date, underscope and logfile.
     %
     % l = Logger;
-    % l = Logger('C\This\path\to\your\logfile.csv');
-    %
+    % l = Logger(
     properties
         source = 'logfile.csv';
         fileId;
@@ -16,13 +15,6 @@ classdef Logger
    
     methods
         function obj = Logger(source)
-           % Constructor of the class
-           % Input:
-           %    If no argument is passed then it used default setting
-           %    to store logfile as for example 2-Jan-2017_logfile.csv.
-           %    If any string is passed as argument it will save logile
-           %    there with specified name.
-           %
            if nargin < 1
                fileId = fopen(strcat(date, '_', obj.source), 'a');
            else
@@ -34,8 +26,6 @@ classdef Logger
         end
         
         function closeInstance(obj)
-            % CLOSEINSTANCE closes opened file. E.g, uninitialize
-            % fileID object.
            try
                fclose(obj.fileId);
            catch ME
@@ -44,13 +34,6 @@ classdef Logger
         end
         
         function writeData(obj, n, data)
-            % WRITEDATA is actuall logging method for
-            % writing to text file (CSV).
-            % Input:
-            %   n (int) - trial number to extract
-            %   data (struct) - structure of exported data
-            %   from CONTEXT object.
-            %
             fprintf(obj.fileId, '%d, %f, %f, %f\n',...
                     n, data.redX, data.redY, data.redZ);
         end
