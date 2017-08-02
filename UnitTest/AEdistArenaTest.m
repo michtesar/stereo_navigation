@@ -13,8 +13,8 @@ if nargin == 0
     stereo = 0;
 end
 
+config;
 run config\testingvalues;
-run config\config;
 
 AssertOpenGL;
 Screen('Preference', 'SkipSyncTests', 1);

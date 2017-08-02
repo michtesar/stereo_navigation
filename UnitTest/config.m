@@ -11,3 +11,9 @@ topView = false;
 
 % Experiment variables
 viewAngle = 30; % Wide of view defined as angle in degrees
+
+% Add paths
+addpath('source\modules\');
+addpath('source\camera\');
+addpath('source\draw\');
+addpath('source\main\');
