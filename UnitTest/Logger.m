@@ -4,30 +4,22 @@ classdef Logger
     % If anything goes wrong you can allways write command
     % 'fclose('all');' to close all active connections to
     % any files on your drive or serial ports.
-    % Default name is used as date, underscope and logfile.
     %
     % l = Logger;
     % l = Logger('C\This\path\to\your\logfile.csv');
     %
     properties
-        source = 'logfile.csv';
+        source = 'logfiles/logfile.csv';
         fileId;
     end
    
     methods
         function obj = Logger(source)
-           % Constructor of the class
-           % Input:
-           %    If no argument is passed then it used default setting
-           %    to store logfile as for example 2-Jan-2017_logfile.csv.
-           %    If any string is passed as argument it will save logile
-           %    there with specified name.
-           %
            if nargin < 1
-               fileId = fopen(strcat(date, '_', obj.source), 'a');
+               fileId = fopen(obj.source, 'a');
            else
-               obj.source = strcat(date, '_', source);
-               fileId = fopen(strcat(date, '_', obj.source), 'a');
+               obj.source = source;
+               fileId = fopen(obj.source, 'a');
            end
            obj.fileId = fileId;
            fprintf(obj.fileId, 'Trial, RedX, RedY, RedZ\n');
