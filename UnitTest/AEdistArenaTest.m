@@ -15,8 +15,8 @@ else
     stereo = 1;
 end
 
-testingvalues;
-config;
+run config\testingvalues;
+run config\config;
 
 AssertOpenGL;
 Screen('Preference', 'SkipSyncTests', 1);
