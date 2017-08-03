@@ -105,7 +105,7 @@ classdef Graphic
         
         function drawInstruction(obj, text)
             unicode = double(text);
-            Screen('FillRect', obj.win, [0, 0, 0])
+            Screen('FillRect', obj.win, [0, 0, 0]);
             DrawFormattedText(obj.win, unicode,...
                  'center', 'center', [255 255 255]); 
         end
