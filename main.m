@@ -10,7 +10,7 @@ g.drawSphere(0.0, 0.0, 0.0);
 g.drawText('Hello, world!');
 g.wait;
 
-g.drawInstruction('Zm??kn?te tla??tko po pokra?ov?n?!');
+g.drawInstruction('Stikn?te pro pokra?ov?n?!');
 g.wait;
 
 g.setView(0, 0, 5, 0, 0, 0);
