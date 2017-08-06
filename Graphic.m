@@ -147,7 +147,7 @@ classdef Graphic
             Screen('Flip', obj.win);
             ShowCursor;
             ListenChar;
-            sca;
+            Screen('CloseAll');
             fprintf('Done!\n');
         end 
     end
