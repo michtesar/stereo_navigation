@@ -132,12 +132,12 @@ classdef Graphic
             %KbReleaseWait;
         end
         
-        function sphere(obj, coord)
+        function sphere(obj, coord, color)
             global GL;
             Screen('BeginOpenGL', obj.win);
             glPushMatrix;
-                glTranslatef(coord(1), coord(2), coord(3));
-                glMaterialfv(GL.FRONT, GL.DIFFUSE, [0, 0, 1]);
+                glTranslatef(coord(1), coord(3), -coord(2));
+                glMaterialfv(GL.FRONT, GL.DIFFUSE, color);
                 glutSolidSphere(0.02, 30, 30);
             glPopMatrix;
             Screen('EndOpenGL', obj.win);

@@ -2,7 +2,7 @@ camera = [0.0, 0.0, 5.0];
 target = [0.0, 0.0, 0.0];
 
 red = [0.234, 0.339, 0.014];
-white = [0.111, 0.70, -0.014];
+white = [0.111, 0.070, -0.014];
 
 try
     g = Graphic;
@@ -22,9 +22,8 @@ while true
             sprintf('\nLook at:\nX = %0.2f, Y = %0.2f, Z = %0.2f\n\n',...
             target(1), target(2), target(3)));
         g.debug(text);
- 
-        g.sphere([0.0, 0.0, 0.0]);
-
+        g.sphere(red, [1, 0, 0]);
+        g.sphere(white, [1 1 1]);
         g.wait;
     catch
         g.close;
