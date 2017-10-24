@@ -24,7 +24,7 @@ end
 try
     log = fopen([subject, '.csv'], 'wt');
     fprintf(log, ['RedX, RedY, RedZ, WhiteX, WhiteY,',...
-        'WhiteZ, Response, RT (ms)\n']);
+        'WhiteZ, CameraYaw, CameraPitch, Response, RT (ms)\n']);
     fclose(log);
 catch
     error('Cannot write or open a logfile!');
@@ -102,6 +102,8 @@ for trial = 1:height(source)
     Screen('EndOpenGL', win);    
     onset = Screen('Flip', win);
     
+    % Pick response from keyboard
+    resp = NaN;
     while 1
         [keyIsDown, seconds, keyCode] = KbCheck;
         keyCode = find(keyCode, 1);
@@ -121,7 +123,7 @@ for trial = 1:height(source)
             end
         end
     end
-    
+        
     Screen('BeginOpenGL', win);
     
     try
@@ -129,7 +131,8 @@ for trial = 1:height(source)
             [source.RedX(trial), source.RedY(trial),...
             source.RedZ(trial), source.WhiteX(trial),...
             source.WhiteY(trial), source.WhiteZ(trial),...
-            resp, (seconds-onset)],...
+            yaw, pitch,...
+            resp, (seconds-onset)*1000],...
             '-append');
     catch
         sca;
