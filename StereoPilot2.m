@@ -21,8 +21,14 @@ if nargin < 1
 end
 
 % Create a logfile and write a header
-dlmwrite([subject, '.csv'], subject);
-dlmwrite([subject, '.csv'], datestr(datetime('now')), '-append');
+try
+    log = fopen([subject, '.csv'], 'wt');
+    fprintf(log, ['RedX, RedY, RedZ, WhiteX, WhiteY,',...
+        'WhiteZ, Response, RT (sec)\n']);
+    fclose(log);
+catch
+    error('Cannot write or open a logfile!');
+end
 
 Screen('Preference', 'SkipSyncTests', 1);
 PsychDefaultSetup(2);
@@ -107,14 +113,28 @@ for trial = 1:height(source)
                 sca;
                 break;
             elseif keyCode == KbName('LeftArrow')
+                resp = 1;
                 break;
             elseif keyCode == KbName('RightArrow')
+                resp = 2;
                 break;
             end
         end
     end
     
     Screen('BeginOpenGL', win);
+    
+    try
+        dlmwrite([subject, '.csv'],...
+            [source.RedX(trial), source.RedY(trial),...
+            source.RedZ(trial), source.WhiteX(trial),...
+            source.WhiteY(trial), source.WhiteZ(trial),...
+            resp, seconds],...
+            '-append');
+    catch
+        sca;
+        error('Cannot append to existing log file!');
+    end
 end
 
 ListenChar(0);
