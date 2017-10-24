@@ -1,7 +1,7 @@
 function StereoPilot2(subject, note)
 % STEREOPILOT2 is PsychToolbox implementation of AEDist 2016 experiment
 %   You can run it without any parameters which leads to running in
-%   default non-stereoscopic mode. Otherwise use prepared GUI to run it.
+%   default non-stereoscopic mode.
 % Coordinate system:
 %   Positive x-Axis points horizontally to the right.
 %   Positive y-Axis points vertically upwards.
@@ -10,9 +10,8 @@ function StereoPilot2(subject, note)
 %   Positive pitch camera rotation moves camera to the top and looks down.
 %   Positive roll camera rotation spins camera itself counter-clockwise.
 %
-% Coded by Michael Tesar
-% <michtesar@gmail.com>
-% 2017, Prague
+% Michael Tesar
+% michtesar@gmail.com
 
 global gltextargetFloor gltexFloor gltexWall gltextargetWall;
 
@@ -214,7 +213,7 @@ function bindtexture(gltextarget, gltex)
 %   mapping by themself. If is crucial to load images into memmory before
 %   OpenGl starts with SCREEN('BEGINOPENGL', WIN).
 %
-%   bindtexture(gltextargetFloor, gltexFloor);
+%   bindtexture(gltextargetFloor, gltexFloor)
 %
 %   For loading the texture use this snippet
 %       img = imread('image.jpg');
