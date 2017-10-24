@@ -1,10 +1,21 @@
-function StereoPilot2()
+function StereoPilot2(fov, subject, note)
 % Positive x-Axis points horizontally to the right.
 % Positive y-Axis points vertically upwards.
 % Positive z-Axis points to the observer.
 % Positive yaw camera rotation leads to move camera to the left.
 % Positive pitch camera rotation moves camera to the top and looks down.
 % Positive roll camera rotation spins camera itself counter-clockwise.
+
+if nargin < 3
+    fov = 60;
+    subject = 'default';
+    note = 'none';
+end
+
+% Make a logfile
+dlmwrite([subject, '.csv'], subject);
+dlmwrite([subject, '.csv'], note, '-append');
+dlmwrite([subject, '.csv'], datestr(datetime('now')), '-append');
 
 load source;
 
@@ -38,7 +49,6 @@ glEnable(GL.LIGHTING);
 glEnable(GL.LIGHT0);
 glEnable(GL.DEPTH_TEST);
 
-fov = 60;
 glMatrixMode(GL.PROJECTION);
 glLoadIdentity;
 gluPerspective(fov, 1/ar, 0.001, 100);
@@ -48,13 +58,15 @@ glLoadIdentity;
 glLightfv(GL.LIGHT0,GL.POSITION,[ 1 2 3 0 ]);
 glLightModelfv(GL.LIGHT_MODEL_TWO_SIDE, GL.TRUE);
 
-gluLookAt(0.302, 0.125, -0.350, 0.302, 0.125, 0.5, 0, 1, 0);
 glClearColor(0, 0, 0, 0);
 glClear;
 
+%yaw = 90;
+%pitch = 346;
+%roll = 0;
 for trial = 1:height(source)
-    yaw = source.Yaw(trial)-90;
-    pitch = 346-360;
+    yaw = source.Yaw(trial); % 90 se kouká pøed sebe, ubíráním kouká proti smìru hodinových ruèièek
+    pitch = 346; %0 kouká rovnobì¾nì s podlahou, ubíráním koukám dolù
     roll = 0;
     
     glClear;
@@ -66,20 +78,24 @@ for trial = 1:height(source)
 
     drawsphere([source.RedX(trial), source.RedY(trial), source.RedZ(trial)], [1, 0, 0]);
     drawsphere([source.WhiteX(trial), source.WhiteY(trial), source.WhiteZ(trial)], [1, 1, 1]);
+    %drawsphere([0.2, 0.014, -0.1], [0, 1, 0]);
+    %drawsphere([-0.2, -0.014, 0.1], [0, 0, 1]);
     
     glPopMatrix;
     Screen('EndOpenGL', win);
     
     % Show some informations first
-    text = sprintf('Trial %d info\nRed:\t\tx = %0.3f, y = %0.3f, z = %0.3f\nWhite:\tx = %0.3f, y = %0.3f, z = %0.3f\nYaw = %0.0f, Pitch = %0.0f, Roll = %d\nFOV = %0.0f',...
-        trial, source.RedX(trial), source.RedY(trial), source.RedZ(trial), source.WhiteX(trial), source.WhiteY(trial), source.WhiteZ(trial), yaw+90, pitch+360, roll, fov);
+    text = sprintf('Trial %d info\nRed:\t\tx = %0.3f\t\t\ty = %0.3f\t\t\t\tz = %0.3f\nWhite:\tx = %0.3f\t\t\ty = %0.3f\t\t\t\tz = %0.3f\nYaw = %0.0f deg, Pitch = %0.0f deg, Roll = %d deg, FOV = %0.0f deg',...
+        trial, source.RedX(trial), source.RedY(trial), source.RedZ(trial), source.WhiteX(trial), source.WhiteY(trial), source.WhiteZ(trial), yaw, pitch, roll, fov);
     Screen('TextSize', win, 40);
     Screen('TextStyle', win, 0);
-    DrawFormattedText(win, text, 100, 200, [255 255 255]);
-    DrawFormattedText(win, 'Navigate to next trial by pressing left of right arrows', 'center', 100, [255 255 0]);
-    DrawFormattedText(win, 'Press ESC to quit experiment', 'center', winRect(4) - 100, [255 0 0]);
+    DrawFormattedText(win, text, 100, 100, [0 255 255]);
     
     Screen('Flip', win);
+    
+    % Save images
+    imageArray = Screen('GetImage', win);
+    imwrite(imageArray, sprintf('Trial %d.jpg', trial));
     
     while 1
         [keyIsDown, seconds, keyCode] = KbCheck;
@@ -92,9 +108,19 @@ for trial = 1:height(source)
                 sca;
                 break;
             elseif keyCode == KbName('LeftArrow')
-
+                yaw = yaw - 10;
                 break;
             elseif keyCode == KbName('RightArrow')
+                yaw = yaw + 10;
+                break;
+            elseif keyCode == KbName('UpArrow')
+                pitch = pitch + 10;
+                break;
+            elseif keyCode == KbName('DownArrow')
+                pitch = pitch - 10;
+                break;
+            elseif keyCode == KbName('SPACE')
+                roll = roll + 10;
                 break;
             end
         end
@@ -119,9 +145,11 @@ function setcamera(camera)
 % See also this link <https://goo.gl/uqcAUD>
 
 if length(camera) == 3
-    glRotatef(camera(1), 0, 1, 0);  % Camera yaw
-    glRotatef(camera(2), 1, 0, 0);  % Camera pitch
-    glRotatef(camera(3), 0, 0, 1);  % Camera roll 
+    glLoadIdentity;
+    glRotatef(360-camera(2), 1, 0, 0);      % Camera pitch (means 360=0 is parallel to floor)
+    glRotatef(camera(1)-270, 0, 1, 0);      % Camera yaw (means that 90 points in front)
+    glRotatef(camera(3), 0, 0, 1);          % Camera roll (means 0 no rotation)    
+    glTranslatef(-0.302, -0.125, 0.350);    % Reset camera to origin
 else
     error('Enter array consists of three values');
 end
