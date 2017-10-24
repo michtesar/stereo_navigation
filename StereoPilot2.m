@@ -1,4 +1,4 @@
-function StereoPilot2(subject, note)
+function StereoPilot2(subject)
 % STEREOPILOT2 is PsychToolbox implementation of AEDist 2016 experiment
 %   You can run it without any parameters which leads to running in
 %   default non-stereoscopic mode. Otherwise use prepared GUI to run it.
@@ -14,18 +14,14 @@ function StereoPilot2(subject, note)
 % <michtesar@gmail.com>
 % 2017, Prague
 
-global gltextargetFloor gltexFloor gltexWall gltextargetWall;
-
 load source;
 
-if nargin < 2
+if nargin < 1
     subject = 'default';
-    note = 'none';
 end
 
 % Create a logfile and write a header
 dlmwrite([subject, '.csv'], subject);
-dlmwrite([subject, '.csv'], note, '-append');
 dlmwrite([subject, '.csv'], datestr(datetime('now')), '-append');
 
 Screen('Preference', 'SkipSyncTests', 1);
@@ -41,6 +37,7 @@ InitializeMatlabOpenGL([], [], [], 0);
 [win, winRect] = PsychImaging('OpenWindow', screenID, 0, [], [], [], 0, 0);
 
 % Read textures into buffer before star to speeding up the epxeriment
+global gltextargetFloor gltexFloor gltexWall gltextargetWall;
 imgFloor = imread('floor.jpg');
 texFloor = Screen('MakeTexture', win, imgFloor, [], 1);
 [gltexFloor, gltextargetFloor] = Screen('GetOpenGLTexture', win, texFloor);
@@ -58,7 +55,7 @@ glEnable(GL.DEPTH_TEST);
 
 glMatrixMode(GL.PROJECTION);
 glLoadIdentity;
-gluPerspective(fov, 1/ar, 0.001, 100);
+gluPerspective(60, 1/ar, 0.001, 100);
 
 glMatrixMode(GL.MODELVIEW);
 glLoadIdentity;
@@ -95,6 +92,7 @@ for trial = 1:height(source)
         source.WhiteZ(trial)], [1, 1, 1]);
     
     glPopMatrix;
+    
     Screen('EndOpenGL', win);    
     Screen('Flip', win);
     
