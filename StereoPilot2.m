@@ -24,7 +24,7 @@ end
 try
     log = fopen([subject, '.csv'], 'wt');
     fprintf(log, ['RedX, RedY, RedZ, WhiteX, WhiteY,',...
-        'WhiteZ, Response, RT (sec)\n']);
+        'WhiteZ, Response, RT (ms)\n']);
     fclose(log);
 catch
     error('Cannot write or open a logfile!');
@@ -100,7 +100,7 @@ for trial = 1:height(source)
     glPopMatrix;
     
     Screen('EndOpenGL', win);    
-    Screen('Flip', win);
+    onset = Screen('Flip', win);
     
     while 1
         [keyIsDown, seconds, keyCode] = KbCheck;
@@ -129,7 +129,7 @@ for trial = 1:height(source)
             [source.RedX(trial), source.RedY(trial),...
             source.RedZ(trial), source.WhiteX(trial),...
             source.WhiteY(trial), source.WhiteZ(trial),...
-            resp, seconds],...
+            resp, (seconds-onset)],...
             '-append');
     catch
         sca;
