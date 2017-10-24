@@ -123,9 +123,10 @@ for trial = 1:height(source)
             end
         end
     end
-        
+    
     Screen('BeginOpenGL', win);
     
+    % Append to logfile experiment variables
     try
         dlmwrite([subject, '.csv'],...
             [source.RedX(trial), source.RedY(trial),...
