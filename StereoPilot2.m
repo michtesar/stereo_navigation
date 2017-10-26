@@ -148,8 +148,14 @@ for trial = 1:height(source)
         warning('Cannot send response tag');
     end
     
-    Screen('BeginOpenGL', win);
+    % Show black screen for baseline t = 500 - 1000 ms (random)
+    Screen('TextSize', win, 50);
+    Screen('DrawText', win, '+', winRect(3)/2, winRect(4)/2, 1);
+    Screen('Flip', win);
+    WaitSecs(0.5+rand);
     
+    Screen('BeginOpenGL', win);
+ 
     % Append to logfile experiment variables
     try
         dlmwrite([subject, '.csv'],...
