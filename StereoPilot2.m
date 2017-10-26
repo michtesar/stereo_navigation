@@ -50,7 +50,7 @@ InitializeMatlabOpenGL([], [], [], 0);
 
 [win, winRect] = PsychImaging('OpenWindow', screenID, 0, [], [], [], 0, 0);
 
-% Read textures into buffer before star to speeding up the epxeriment
+% Read textures into buffer before star to speeding up the experiment
 global gltextargetFloor gltexFloor gltexWall gltextargetWall;
 imgFloor = imread('floor.jpg');
 texFloor = Screen('MakeTexture', win, imgFloor, [], 1);
