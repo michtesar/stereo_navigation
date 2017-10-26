@@ -102,6 +102,9 @@ for trial = 1:height(source)
     Screen('EndOpenGL', win);    
     onset = Screen('Flip', win);
     
+    % Send onset tag of scene
+    sendtag(10);
+    
     % Pick response from keyboard
     resp = NaN;
     while 1
@@ -123,6 +126,11 @@ for trial = 1:height(source)
             end
         end
     end
+    
+    % Send response tag based on pressed key
+    %   1 - Left arrow key
+    %   2 - Right arrow key
+    sendtag(resp);
     
     Screen('BeginOpenGL', win);
     
@@ -255,4 +263,19 @@ glTexParameteri(gltextarget, GL.TEXTURE_WRAP_T, GL.REPEAT);
 glTexParameteri(gltextarget, GL.TEXTURE_MIN_FILTER, GL.LINEAR_MIPMAP_LINEAR);
 glTexParameteri(gltextarget, GL.TEXTURE_MIN_FILTER, GL.LINEAR);
 glTexParameteri(gltextarget, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
+end
+
+function sendtag(tag)
+% SENDTAG is communication function with Biosemi ActiveTwo
+% via serial port as emulator to paraller port.
+%
+    eeg = serial('COM3', 'BAUD', 115200, 'DataBits', 8);
+    fopen(eeg);
+    try
+        fwrite(eeg, tag);
+    catch ME
+        warning(strcat(ME, ' cannot write tag'));
+        fclose(eeg);
+    end
+    fclose(eeg);
 end
