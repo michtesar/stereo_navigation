@@ -16,6 +16,14 @@ function StereoPilot2(subject)
 
 load source;
 
+% Randomize source table
+matrix = table2array(source);
+data = Shuffle(matrix, 2);
+source = table(data(:,1), data(:,2), data(:,3), data(:,4),...
+    data(:,5), data(:,6), data(:,7), 'VariableNames',...
+    {'RedX', 'RedZ', 'RedY', 'WhiteX', 'WhiteZ', 'WhiteY', 'Yaw'});
+
+
 if nargin < 1
     subject = 'default';
 end
@@ -103,7 +111,11 @@ for trial = 1:height(source)
     onset = Screen('Flip', win);
     
     % Send onset tag of scene
-    sendtag(10);
+    try
+        sendtag(10);
+    catch
+        warning('Cannot send scene onset tag')
+    end
     
     % Pick response from keyboard
     resp = NaN;
@@ -130,7 +142,11 @@ for trial = 1:height(source)
     % Send response tag based on pressed key
     %   1 - Left arrow key
     %   2 - Right arrow key
-    sendtag(resp);
+    try
+        sendtag(resp);
+    catch
+        warning('Cannot send response tag');
+    end
     
     Screen('BeginOpenGL', win);
     
