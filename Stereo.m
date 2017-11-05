@@ -1,4 +1,4 @@
-function StereoPilot2(subject)
+function Stereo(subject)
 % STEREOPILOT2 is PsychToolbox implementation of AEDist 2016 experiment
 %   You can run it without any parameters which leads to running in
 %   default non-stereoscopic mode. Otherwise use prepared GUI to run it.
@@ -14,15 +14,7 @@ function StereoPilot2(subject)
 % <michtesar@gmail.com>
 % 2017, Prague
 
-load source;
-
-% Randomize source table
-matrix = table2array(source);
-data = Shuffle(matrix, 2);
-source = table(data(:,1), data(:,2), data(:,3), data(:,4),...
-    data(:,5), data(:,6), data(:,7), 'VariableNames',...
-    {'RedX', 'RedZ', 'RedY', 'WhiteX', 'WhiteZ', 'WhiteY', 'Yaw'});
-
+load src/source.mat;
 
 if nargin < 1
     subject = 'default';
@@ -32,30 +24,28 @@ end
 try
     log = fopen([subject, '.csv'], 'wt');
     fprintf(log, ['RedX, RedY, RedZ, WhiteX, WhiteY,',...
-        'WhiteZ, CameraYaw, CameraPitch, Response, RT (ms)\n']);
+        'WhiteZ, CameraPitch, CameraRoll, CameraYaw, Response, RT (ms)\n']);
     fclose(log);
 catch
     error('Cannot write or open a logfile!');
 end
 
-Screen('Preference', 'SkipSyncTests', 1);
+Screen('Preference', 'SkipSyncTests', 2);
 PsychDefaultSetup(2);
 
 HideCursor();
 ListenChar(2);
 
-screenID = max(Screen('Screens'));
+InitializeMatlabOpenGL;
 
-InitializeMatlabOpenGL([], [], [], 0);
-
-[win, winRect] = PsychImaging('OpenWindow', screenID, 0, [], [], [], 0, 0);
+[win, winRect] = PsychImaging('OpenWindow', 0, 0, [], [], [], 0, 0);
 
 % Read textures into buffer before star to speeding up the experiment
 global gltextargetFloor gltexFloor gltexWall gltextargetWall;
-imgFloor = imread('floor.jpg');
+imgFloor = imread('img/floor.jpg');
 texFloor = Screen('MakeTexture', win, imgFloor, [], 1);
 [gltexFloor, gltextargetFloor] = Screen('GetOpenGLTexture', win, texFloor);
-imgWall = imread('wall.jpg');
+imgWall = imread('img/wall.jpg');
 texWall = Screen('MakeTexture', win, imgWall, [], 1);
 [gltexWall, gltextargetWall] = Screen('GetOpenGLTexture', win, texWall);
 
@@ -79,24 +69,14 @@ glLightModelfv(GL.LIGHT_MODEL_TWO_SIDE, GL.TRUE);
 glClearColor(0, 0, 0, 0);
 glClear;
 
-for trial = 1:height(source)
-    % Camera yaw - left to right look, while 90 means to look directly in
-    % front. Angles smaller than 90 deg points to left, and bigger to
-    % right.
-    yaw = source.Yaw(trial);
-    % Camera pitch - up and down look, while 360 means to look parallel with
-    % the floor and smaller angle like 346 means to look slightly down.
-    pitch = 346;
-    % Camera roll - rotate a camera around its axe. It is not used in this
-    % experiment, but can be setted up and it works.
-    roll = 0;
-    
+for trial = 1:height(source)    
     glClear;
     
     glPushMatrix;
     
     % Set camera angles and draw arena
-    setcamera([yaw, pitch, roll]);
+    setcamera([source.Yaw(trial), source.Pitch(trial), source.Roll(trial)],...
+        [source.CameraX(trial), source.CameraY(trial), source.CameraZ(trial)]);
     drawarena;
     
     % Draw spheres
@@ -152,7 +132,7 @@ for trial = 1:height(source)
     Screen('TextSize', win, 50);
     Screen('DrawText', win, '+', winRect(3)/2, winRect(4)/2, 1);
     Screen('Flip', win);
-    WaitSecs(0.5+rand);
+    %WaitSecs(0.5+rand);
     
     Screen('BeginOpenGL', win);
  
@@ -162,7 +142,8 @@ for trial = 1:height(source)
             [source.RedX(trial), source.RedY(trial),...
             source.RedZ(trial), source.WhiteX(trial),...
             source.WhiteY(trial), source.WhiteZ(trial),...
-            yaw, pitch,...
+            source.Pitch(trial), source.Roll(trial),...
+            source.Yaw(trial),...
             resp, (seconds-onset)*1000],...
             '-append');
     catch
@@ -177,7 +158,7 @@ sca;
 
 end
 
-function setcamera(camera)
+function setcamera(camera, origin)
 % SETCAMERA sets camera yaw, pitch and roll.
 %   setcamera([yaw, pitch, roll]); to set the scene
 %   yaw - left to right possition
@@ -186,14 +167,14 @@ function setcamera(camera)
 %
 % See also this link <https://goo.gl/uqcAUD>
 
-if length(camera) == 3
+if length(camera) == 3 && length(origin) == 3
     glLoadIdentity;
     glRotatef(360-camera(2), 1, 0, 0);  % Pitch (360 deg is parallel)
     glRotatef(camera(1)-270, 0, 1, 0);  % Yaw (90 deg points in front)
-    glRotatef(camera(3), 0, 0, 1);      % Camera roll (0 deg no rotation)    
-    glTranslatef(-0.302, -0.125, 0.350);% Reset camera to origin
+    glRotatef(camera(3), 0, 0, 1);      % Camera roll (0 deg no rotation)
+    glTranslatef(-origin(1), -origin(3), -origin(2));
 else
-    error('Enter array consists of three values');
+    error('Enter two arrays consists of three values');
 end
 end
 
@@ -206,13 +187,13 @@ function drawsphere(coord, rgb)
 
 global GL;
 
-r = 0.035;
+r = 0.0415;
 
 glMaterialfv(GL.FRONT_AND_BACK,GL.AMBIENT, [rgb(1), rgb(2), rgb(3), 1]);
 glMaterialfv(GL.FRONT_AND_BACK,GL.DIFFUSE, [rgb(1), rgb(2), rgb(3), 1]);
 
 glPushMatrix;
-glTranslatef(coord(1), coord(2), coord(3));
+glTranslatef(coord(1), coord(3), coord(2));
 glutSolidSphere(r, 100, 100);
 glPopMatrix;
 end
@@ -252,11 +233,11 @@ glPopMatrix;
 glMaterialfv(GL.FRONT_AND_BACK, GL.AMBIENT, [1.0 1.0 0.0 1]);
 glMaterialfv(GL.FRONT_AND_BACK, GL.DIFFUSE, [1.0 1.0 0.0 1]);
 glPushMatrix
-height = 0.1;
+height = 0.153;
 glTranslatef(0.017, height, 0.483);
 glRotatef(90, 1, 0, 0);
 mark = gluNewQuadric;
-gluCylinder(mark, 0.025, 0.025, height, 100, 100);
+gluCylinder(mark, 0.0345, 0.0345, height, 100, 100);
 glPopMatrix;
 end
 
