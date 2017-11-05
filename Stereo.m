@@ -25,7 +25,7 @@ try
     log = fopen([subject, '.csv'], 'wt');
     fprintf(log, ['RedX, RedY, RedZ, WhiteX, WhiteY,',...
         'WhiteZ, CameraPitch, CameraRoll, CameraYaw,',...
-        'Response, RT (ms), StimOnsetClock, Name\n']);
+        'Response, RTms, StimOnsetClock, Name, IsCorrect\n']);
 catch
     error('Cannot write or open a logfile!');
 end
@@ -132,20 +132,31 @@ for trial = 1:height(source)
                 sca;
                 break;
             elseif keyCode == KbName('LeftArrow')
-                resp = 1;
+                resp = 'left';
                 break;
             elseif keyCode == KbName('RightArrow')
-                resp = 2;
+                resp = 'right';
                 break;
             end
         end
     end
     
+    % Decide if response was correct or not
+    if strcmp(resp, source.Correct{trial})
+        correctAnswer = true;
+    else
+        correctAnswer = false;
+    end
+    
     % Send response tag based on pressed key
-    %   1 - Left arrow key
-    %   2 - Right arrow key
+    %   1 - Correct answer
+    %   2 - Incorrect answer
     try
-        sendtag(resp);
+        if correctAnswer
+            sendtag(1);
+        else
+            sentag(2);
+        end
     catch
         warning('Cannot send response tag');
     end
@@ -153,13 +164,14 @@ for trial = 1:height(source)
     % Show black screen for baseline t = 500 - 1000 ms (random)
     Screen('DrawText', win, '+', winRect(3)/2, winRect(4)/2, 1);
     Screen('Flip', win);
-    WaitSecs(0.1);%+rand);
+    WaitSecs(0.5+rand);
     
     % Give feedback if training
     if source.Feedback(trial)
         text = sprintf('Correct %d out of %d (%0.2f %%) trials',...
             correct, 8, correct/8*100);
         DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
+        correct = 0;
         Screen('Flip', win);
         KbStrokeWait;
     end
@@ -168,12 +180,12 @@ for trial = 1:height(source)
  
     % Append to logfile experiment variables
     try
-        fprintf(log, '%0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %d, %0.4f, %0.4f, %s\n',...
+        fprintf(log, '%0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %s, %0.4f, %0.4f, %s, %d\n',...
             source.RedX(trial), source.RedY(trial), source.RedZ(trial),...
             source.WhiteX(trial), source.WhiteY(trial),...
             source.WhiteZ(trial), source.Pitch(trial),...
             source.Roll(trial), source.Yaw(trial), resp,...
-            (seconds-onset)*1000, onset, source.Name{trial});
+            (seconds-onset)*1000, onset, source.Name{trial}, correctAnswer);
     catch
         sca;
         fclose(log);
