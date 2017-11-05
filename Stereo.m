@@ -49,6 +49,14 @@ imgWall = imread('img/wall.jpg');
 texWall = Screen('MakeTexture', win, imgWall, [], 1);
 [gltexWall, gltextargetWall] = Screen('GetOpenGLTexture', win, texWall);
 
+Screen('TextSize', win, 70);
+
+% Show initial instructions
+text = 'This is beta of AEDist experiment\nContinue with ANY key...';
+DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
+Screen('Flip', win);
+KbStrokeWait;
+
 Screen('BeginOpenGL', win);
 
 ar = winRect(4) / winRect(3);
@@ -69,7 +77,21 @@ glLightModelfv(GL.LIGHT_MODEL_TWO_SIDE, GL.TRUE);
 glClearColor(0, 0, 0, 0);
 glClear;
 
-for trial = 1:height(source)    
+correct = 0;
+
+for trial = 1:height(source)
+    Screen('EndOpenGL', win);
+    
+    % Give instuction for a block if any
+    if source.Pause(trial)
+        text = sprintf('This is a block of %s', source.Type{trial});
+        DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
+        Screen('Flip', win);
+        KbStrokeWait;
+    end
+    
+    Screen('BeginOpenGL', win);
+    
     glClear;
     
     glPushMatrix;
@@ -129,10 +151,18 @@ for trial = 1:height(source)
     end
     
     % Show black screen for baseline t = 500 - 1000 ms (random)
-    Screen('TextSize', win, 50);
     Screen('DrawText', win, '+', winRect(3)/2, winRect(4)/2, 1);
     Screen('Flip', win);
-    %WaitSecs(0.5+rand);
+    WaitSecs(0.1);%+rand);
+    
+    % Give feedback if training
+    if source.Feedback(trial)
+        text = sprintf('Correct %d out of %d (%0.2f %%) trials',...
+            correct, 8, correct/8*100);
+        DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
+        Screen('Flip', win);
+        KbStrokeWait;
+    end
     
     Screen('BeginOpenGL', win);
  
@@ -150,6 +180,12 @@ for trial = 1:height(source)
         error('Cannot append to existing log file!');
     end
 end
+
+% Ending instructions
+text = 'This is end of experiment\nFinish it with ANY key...';
+DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
+Screen('Flip', win);
+KbStrokeWait;
 
 ListenChar(0);
 ShowCursor();
