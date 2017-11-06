@@ -38,7 +38,7 @@ ListenChar(2);
 
 InitializeMatlabOpenGL;
 
-[win, winRect] = PsychImaging('OpenWindow', 0, 0, [], [], [], 0, 0);
+[win, winRect] = PsychImaging('OpenWindow', 0, 0, [], [], [], 1, 0);
 
 % Read textures into buffer before star to speeding up the experiment
 global gltextargetFloor gltexFloor gltexWall gltextargetWall;
@@ -90,26 +90,36 @@ for trial = 1:height(source)
         KbStrokeWait;
     end
     
-    Screen('BeginOpenGL', win);
+    for view = 0:1
+        Screen('SelectStereoDrawbuffer', win, view);
+        Screen('BeginOpenGL', win);
+
+        glClear;
+
+        glPushMatrix;  
+        
+        % Set camera angles and draw arena
+        setcamera([source.Yaw(trial), source.Pitch(trial), source.Roll(trial)],...
+            [source.CameraX(trial), source.CameraY(trial), source.CameraZ(trial)]);
+        if view == 0 && source.Stereo(trial) == 1
+            glTranslatef(0.005, 0, 0);
+        elseif view == 1 && source.Stereo(trial) == 1
+            glTranslatef(-0.005, 0, 0);
+        end
+        drawarena;
+
+        % Draw spheres
+        drawsphere([source.RedX(trial), source.RedY(trial),...
+            source.RedZ(trial)], [1, 0, 0]);
+        drawsphere([source.WhiteX(trial), source.WhiteY(trial),...
+            source.WhiteZ(trial)], [1, 1, 1]);
+
+        glPopMatrix;
+
+        Screen('EndOpenGL', win);    
+    end
     
-    glClear;
-    
-    glPushMatrix;
-    
-    % Set camera angles and draw arena
-    setcamera([source.Yaw(trial), source.Pitch(trial), source.Roll(trial)],...
-        [source.CameraX(trial), source.CameraY(trial), source.CameraZ(trial)]);
-    drawarena;
-    
-    % Draw spheres
-    drawsphere([source.RedX(trial), source.RedY(trial),...
-        source.RedZ(trial)], [1, 0, 0]);
-    drawsphere([source.WhiteX(trial), source.WhiteY(trial),...
-        source.WhiteZ(trial)], [1, 1, 1]);
-    
-    glPopMatrix;
-    
-    Screen('EndOpenGL', win);    
+    Screen('DrawingFinished', win, 2);
     onset = Screen('Flip', win);
     
     % Send onset tag of scene
@@ -162,7 +172,7 @@ for trial = 1:height(source)
     end
     
     % Show black screen for baseline t = 500 - 1000 ms (random)
-    Screen('DrawText', win, '+', winRect(3)/2, winRect(4)/2, 1);
+    DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
     Screen('Flip', win);
     WaitSecs(0.5+rand);
     
