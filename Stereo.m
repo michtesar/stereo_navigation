@@ -78,6 +78,8 @@ glClearColor(0, 0, 0, 0);
 glClear;
 
 correct = 0;
+KbQueueCreate;
+KbQueueStart;
 
 for trial = 1:height(source)
     Screen('EndOpenGL', win);
@@ -129,31 +131,34 @@ for trial = 1:height(source)
         warning('Cannot send scene onset tag')
     end
     
-    % Pick response from keyboard
-    resp = NaN;
-    while 1
-        [keyIsDown, seconds, keyCode] = KbCheck;
-        keyCode = find(keyCode, 1);
-        if keyIsDown
-            KbReleaseWait;
-            if keyCode == KbName('ESCAPE')
-                ListenChar(0);
-                ShowCursor();
-                sca;
-                break;
-            elseif keyCode == KbName('LeftArrow')
-                resp = 'left';
-                break;
-            elseif keyCode == KbName('RightArrow')
-                resp = 'right';
-                break;
-            end
+    KbQueueFlush;
+    WaitSecs(3.0);
+
+    [pressed, firstPress] = KbQueueCheck;
+
+    if pressed
+        firstPress(firstPress == 0) = NaN;
+        [reaction, keyIndex] = min(firstPress);
+        key = KbName(keyIndex); 
+        if strcmp(key, 'ESCAPE')
+            ListenChar(0);
+            ShowCursor();
+            sca;
+            break;
+        elseif strcmp(key, 'LeftArrow')
+            resp = 'left';
+        elseif strcmp(key, 'RightArrow')
+            resp = 'right';
         end
+        rt = (reaction-onset)*1000;
+    else
+        rt = 0.0;
     end
     
     % Decide if response was correct or not
     if strcmp(resp, source.Correct{trial})
         correctAnswer = true;
+        correct = correct + 1;
     else
         correctAnswer = false;
     end
@@ -165,7 +170,7 @@ for trial = 1:height(source)
         if correctAnswer
             sendtag(1);
         else
-            sentag(2);
+            sendtag(2);
         end
     catch
         warning('Cannot send response tag');
@@ -195,7 +200,7 @@ for trial = 1:height(source)
             source.WhiteX(trial), source.WhiteY(trial),...
             source.WhiteZ(trial), source.Pitch(trial),...
             source.Roll(trial), source.Yaw(trial), resp,...
-            (seconds-onset)*1000, onset, source.Name{trial}, correctAnswer);
+            rt, onset, source.Name{trial}, correctAnswer);
     catch
         sca;
         fclose(log);
