@@ -86,15 +86,10 @@ for trial = 1:height(source)
     
     % Give instuction for a block if any
     if source.Pause(trial)
-        text = sprintf('Navigate to: %s\n\nPress RIGHT KEY to continue\n\n0-%d / 8', source.Type{trial}, source.Block(trial));
+        text = sprintf('This is a block of %s', source.Type{trial});
         DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
         Screen('Flip', win);
-        while 1
-            [keyDown, secs, keyCode] = KbCheck;
-            if strcmp(KbName(keyCode == 1), 'RightArrow')
-                break
-            end
-        end
+        KbStrokeWait;
     end
     
     for view = 0:1
