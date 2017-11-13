@@ -49,10 +49,10 @@ imgWall = imread('img/wall.jpg');
 texWall = Screen('MakeTexture', win, imgWall, [], 1);
 [gltexWall, gltextargetWall] = Screen('GetOpenGLTexture', win, texWall);
 
-Screen('TextSize', win, 30);
+Screen('TextSize', win, 70);
 
 % Show initial instructions
-text = 'Wellcome in navigation experiment.\nYour goal is to navigate in arena\n\nPress any KEY to continue.';
+text = 'This is beta of AEDist experiment\nContinue with ANY key...';
 DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
 Screen('Flip', win);
 KbStrokeWait;
@@ -78,7 +78,6 @@ glClearColor(0, 0, 0, 0);
 glClear;
 
 correct = 0;
-KbQueueCreate(-1);
 KbQueueCreate;
 KbQueueStart;
 
