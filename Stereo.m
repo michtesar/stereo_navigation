@@ -49,13 +49,13 @@ imgWall = imread('img/wall.jpg');
 texWall = Screen('MakeTexture', win, imgWall, [], 1);
 [gltexWall, gltextargetWall] = Screen('GetOpenGLTexture', win, texWall);
 
-Screen('TextSize', win, 70);
+Screen('TextSize', win, 30);
 
 % Show initial instructions
 text = 'This is beta of AEDist experiment\nContinue with ANY key...';
 DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
 Screen('Flip', win);
-KbStrokeWait;
+KbWait;
 
 Screen('BeginOpenGL', win);
 
@@ -78,18 +78,24 @@ glClearColor(0, 0, 0, 0);
 glClear;
 
 correct = 0;
-KbQueueCreate;
-KbQueueStart;
 
 for trial = 1:height(source)
     Screen('EndOpenGL', win);
     
     % Give instuction for a block if any
     if source.Pause(trial)
-        text = sprintf('This is a block of %s', source.Type{trial});
+        text = sprintf('This is a block of %s\n Press RIGHT arrow to continue', source.Type{trial});
         DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
         Screen('Flip', win);
-        KbStrokeWait;
+        while 1
+            [keyIsDown, ~, keyCode] = KbCheck;
+            if keyIsDown
+                if keyCode(KbName('RightArrow'))
+                    break
+                end
+            end
+        end
+        Screen('Flip', win);
     end
     
     for view = 0:1
@@ -131,28 +137,23 @@ for trial = 1:height(source)
         warning('Cannot send scene onset tag')
     end
     
-    KbQueueFlush;
-    WaitSecs(3.0);
-
-    [pressed, firstPress] = KbQueueCheck;
-
-    if pressed
-        firstPress(firstPress == 0) = NaN;
-        [reaction, keyIndex] = min(firstPress);
-        key = KbName(keyIndex); 
-        if strcmp(key, 'ESCAPE')
-            ListenChar(0);
-            ShowCursor();
-            sca;
-            break;
-        elseif strcmp(key, 'LeftArrow')
-            resp = 'left';
-        elseif strcmp(key, 'RightArrow')
-            resp = 'right';
-        end
+    while 1
+        [keyIsDown, reaction, keyCode] = KbCheck;
         rt = (reaction-onset)*1000;
-    else
-        rt = 0.0;
+        if keyIsDown
+            if keyCode(KbName('ESCAPE'))
+                ListenChar(0);
+                ShowCursor();
+                sca;
+                break
+            elseif keyCode(KbName('LeftArrow'))
+                resp = 'left';
+                break
+            elseif keyCode(KbName('RightArrow'))
+                resp = 'right';
+                break
+            end
+        end
     end
     
     % Decide if response was correct or not
@@ -183,12 +184,19 @@ for trial = 1:height(source)
     
     % Give feedback if training
     if source.Feedback(trial)
-        text = sprintf('Correct %d out of %d (%0.2f %%) trials',...
+        text = sprintf('Correct %d out of %d (%0.2f %%) trials\nPress RIGHT key to continue',...
             correct, 8, correct/8*100);
         DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
         correct = 0;
         Screen('Flip', win);
-        KbStrokeWait;
+        while 1
+            [keyIsDown, ~, keyCode] = KbCheck;
+            if keyIsDown
+                if keyCode(KbName('RightArrow'))
+                    break
+                end
+            end
+        end
     end
     
     Screen('BeginOpenGL', win);
@@ -212,7 +220,7 @@ end
 text = 'This is end of experiment\nFinish it with ANY key...';
 DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
 Screen('Flip', win);
-KbStrokeWait;
+KbWait;
 
 ListenChar(0);
 ShowCursor();
