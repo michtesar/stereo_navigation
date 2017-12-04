@@ -52,7 +52,7 @@ texWall = Screen('MakeTexture', win, imgWall, [], 1);
 Screen('TextSize', win, 30);
 
 % Show initial instructions
-instructionText = 'This is beta of AEDist experiment\nContinue with ANY key...';
+instructionText = 'Hello!\nThank you for your time in participation in navigation experiment\nDecide which sphere is closer to reference point which you will see on following screen.\nYou can answer with LEFT or RIGHT key.\n\nPress ANY key to continue...';
 DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
 Screen('Flip', win);
 KbWait;
@@ -84,7 +84,7 @@ for trial = 1:height(source)
     
     % Give instuction for a block if any
     if source.Pause(trial)
-        instructionText = sprintf('This is a block of %s\n Press RIGHT arrow to continue', char(source.Type(1)));
+        instructionText = sprintf('Closer to %s\n Press RIGHT arrow to continue', char(source.Type(1)));
         DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
         Screen('Flip', win);
         while 1
@@ -175,6 +175,16 @@ for trial = 1:height(source)
         end
     catch
         warning('Cannot send response tag');
+    end
+    
+    if source.Feedback(trial)
+        if correctAnswer
+            DrawFormattedText(win, 'Correct!', 'center', 'center', [1 1 1]);
+        else
+            DrawFormattedText(win, 'Wrong!', 'center', 'center', [1 1 1]);
+        end
+        Screen('Flip', win);
+        WaitSecs(0.5);
     end
     
     % Show black screen for baseline t = 500 - 1000 ms (random)
