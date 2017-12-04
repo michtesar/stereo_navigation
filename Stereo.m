@@ -52,8 +52,8 @@ texWall = Screen('MakeTexture', win, imgWall, [], 1);
 Screen('TextSize', win, 30);
 
 % Show initial instructions
-text = 'This is beta of AEDist experiment\nContinue with ANY key...';
-DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
+instructionText = 'This is beta of AEDist experiment\nContinue with ANY key...';
+DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
 Screen('Flip', win);
 KbWait;
 
@@ -84,8 +84,8 @@ for trial = 1:height(source)
     
     % Give instuction for a block if any
     if source.Pause(trial)
-        text = sprintf('This is a block of %s\n Press RIGHT arrow to continue', source.Type{trial});
-        DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
+        instructionText = sprintf('This is a block of %s\n Press RIGHT arrow to continue', char(source.Type(1)));
+        DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
         Screen('Flip', win);
         while 1
             [keyIsDown, ~, keyCode] = KbCheck;
@@ -109,9 +109,9 @@ for trial = 1:height(source)
         % Set camera angles and draw arena
         setcamera([source.Yaw(trial), source.Pitch(trial), source.Roll(trial)],...
             [source.CameraX(trial), source.CameraY(trial), source.CameraZ(trial)]);
-        if view == 0 && source.Stereo(trial) == 1
+        if view == 0 && double(source.Stereo(trial)) == 1
             glTranslatef(0.005, 0, 0);
-        elseif view == 1 && source.Stereo(trial) == 1
+        elseif view == 1 && double(source.Stereo(trial)) == 1
             glTranslatef(-0.005, 0, 0);
         end
         drawarena;
@@ -157,7 +157,7 @@ for trial = 1:height(source)
     end
     
     % Decide if response was correct or not
-    if strcmp(resp, source.Correct{trial})
+    if strcmp(resp, char(source.CorrectAnswer(trial)))
         correctAnswer = true;
         correct = correct + 1;
     else
@@ -184,9 +184,9 @@ for trial = 1:height(source)
     
     % Give feedback if training
     if source.Feedback(trial)
-        text = sprintf('Correct %d out of %d (%0.2f %%) trials\nPress RIGHT key to continue',...
+        instructionText = sprintf('Correct %d out of %d (%0.2f %%) trials\nPress RIGHT key to continue',...
             correct, 8, correct/8*100);
-        DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
+        DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
         correct = 0;
         Screen('Flip', win);
         while 1
@@ -217,8 +217,8 @@ for trial = 1:height(source)
 end
 
 % Ending instructions
-text = 'This is end of experiment\nFinish it with ANY key...';
-DrawFormattedText(win, text, 'center', 'center', [1 1 1]);
+instructionText = 'This is end of experiment\nFinish it with ANY key...';
+DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
 Screen('Flip', win);
 KbWait;
 
