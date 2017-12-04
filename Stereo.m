@@ -200,9 +200,10 @@ for trial = 1:height(source)
     
     % Give feedback if training
     if source.BlockEnd(trial)
-        % TODO: Compute missing trials and log them
-        instructionText = sprintf('Which block was presented?\n\nLEFT - closer to you\nRIGHT - closer to mark\nUP - closer to red sphere\n\n\nScore: %d %%\nMissing: %d\nAverage RT: %.2f ms',...
-            correct/blockIndex*100, 0, (averageRT/blockIndex)/1000);
+        % TODO: Compute missing trials and log them. Get correct reaction
+        % time to display.
+        instructionText = sprintf('Which block was presented?\n\nLEFT closer to you\nRIGHT closer to mark\nUP closer to red sphere\n\n\nScore: %d %% from %d trials\nMissing: %d\nAverage RT: %.2f ms',...
+            correct/blockIndex*100, blockIndex, 0, averageRT/blockIndex);
         DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
         correct = 0;
         blockIndex = 0;
