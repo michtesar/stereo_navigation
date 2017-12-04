@@ -84,7 +84,7 @@ for trial = 1:height(source)
     
     % Give instuction for a block if any
     if source.Pause(trial)
-        instructionText = sprintf('Closer to %s\n Press RIGHT arrow to continue', char(source.Type(1)));
+        instructionText = sprintf('Closer to %s\n\n\nPress RIGHT arrow to continue\n\n\n%d - %d / 8', char(source.Type(trial)), source.Repetition(trial), source.BlockRepetition(trial));
         DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
         Screen('Flip', win);
         while 1
@@ -193,7 +193,7 @@ for trial = 1:height(source)
     WaitSecs(0.5+rand);
     
     % Give feedback if training
-    if source.Feedback(trial)
+    if source.BlockEnd(trial)
         instructionText = sprintf('Correct %d out of %d (%0.2f %%) trials\nPress RIGHT key to continue',...
             correct, 8, correct/8*100);
         DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
