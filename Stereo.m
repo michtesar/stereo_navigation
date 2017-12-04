@@ -56,6 +56,7 @@ instructionText = 'Hello!\nThank you for your time in participation in navigatio
 DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
 Screen('Flip', win);
 KbWait;
+WaitSecs(0.1);
 
 Screen('BeginOpenGL', win);
 
@@ -96,6 +97,7 @@ for trial = 1:height(source)
             end
         end
         Screen('Flip', win);
+        
     end
     
     for view = 0:1
@@ -194,7 +196,9 @@ for trial = 1:height(source)
     
     % Give feedback if training
     if source.BlockEnd(trial)
-        instructionText = sprintf('Which block was presented?\n\nLEFT - closer to you\nRIGHT - closer to mark\nUP - closer to red sphere\n\n\nPress RIGHT key to continue\n\n\nScore: %d \%\nMissing: %d\nAverage RT: %d ms',...
+        % TODO: Compute average reaction time and number of missing trials
+        % with logging it into logfile
+        instructionText = sprintf('Which block was presented?\n\nLEFT - closer to you\nRIGHT - closer to mark\nUP - closer to red sphere\n\n\nPress RIGHT key to continue\n\n\nScore: %d %%\nMissing: %d\nAverage RT: %d ms',...
             correct/8*100, 100, 100);
         DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
         correct = 0;
@@ -204,9 +208,23 @@ for trial = 1:height(source)
             if keyIsDown
                 if keyCode(KbName('RightArrow'))
                     break
+                elseif keyCode(KbName('LeftArrow'))
+                    break
+                elseif keyCode(KbName('UpArrow'))
+                    break
                 end
             end
         end
+        Screen('Flip', win);
+        WaitSecs(0.1);
+        Screen('Flip', win);
+        
+        DrawFormattedText(win, 'How confident you have felt you guess?\n1 - I only guess ... 5 - I am sure', 'center', 'center', [1 1 1]);
+        Screen('Flip', win);
+        % TODO: Get specific keyboard response, log it and maybe do some
+        % likert scale like template over it to be precise...
+        KbWait;
+        WaitSecs(0.1);
     end
     
     Screen('BeginOpenGL', win);
