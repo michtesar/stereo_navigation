@@ -198,7 +198,7 @@ for trial = 1:height(source)
     if source.BlockEnd(trial)
         % TODO: Compute average reaction time and number of missing trials
         % with logging it into logfile
-        instructionText = sprintf('Which block was presented?\n\nLEFT - closer to you\nRIGHT - closer to mark\nUP - closer to red sphere\n\n\nPress RIGHT key to continue\n\n\nScore: %d %%\nMissing: %d\nAverage RT: %d ms',...
+        instructionText = sprintf('Which block was presented?\n\nLEFT - closer to you\nRIGHT - closer to mark\nUP - closer to red sphere\n\n\nScore: %d %%\nMissing: %d\nAverage RT: %d ms',...
             correct/8*100, 100, 100);
         DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
         correct = 0;
