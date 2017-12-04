@@ -79,8 +79,11 @@ glClearColor(0, 0, 0, 0);
 glClear;
 
 correct = 0;
+blockIndex = 0;
+averageRT = 0;
 
 for trial = 1:height(source)
+    blockIndex = blockIndex + 1;
     Screen('EndOpenGL', win);
     
     % Give instuction for a block if any
@@ -142,6 +145,7 @@ for trial = 1:height(source)
     while 1
         [keyIsDown, reaction, keyCode] = KbCheck;
         rt = (reaction-onset)*1000;
+        averageRT = averageRT + rt;
         if keyIsDown
             if keyCode(KbName('ESCAPE'))
                 ListenChar(0);
@@ -196,12 +200,12 @@ for trial = 1:height(source)
     
     % Give feedback if training
     if source.BlockEnd(trial)
-        % TODO: Compute average reaction time and number of missing trials
-        % with logging it into logfile
-        instructionText = sprintf('Which block was presented?\n\nLEFT - closer to you\nRIGHT - closer to mark\nUP - closer to red sphere\n\n\nScore: %d %%\nMissing: %d\nAverage RT: %d ms',...
-            correct/8*100, 100, 100);
+        % TODO: Compute missing trials and log them
+        instructionText = sprintf('Which block was presented?\n\nLEFT - closer to you\nRIGHT - closer to mark\nUP - closer to red sphere\n\n\nScore: %d %%\nMissing: %d\nAverage RT: %.2f ms',...
+            correct/blockIndex*100, 0, (averageRT/blockIndex)/1000);
         DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
         correct = 0;
+        blockIndex = 0;
         Screen('Flip', win);
         while 1
             [keyIsDown, ~, keyCode] = KbCheck;
