@@ -1,4 +1,4 @@
-function Stereo(subject)
+function Stereo
 % STEREOPILOT2 is PsychToolbox implementation of AEDist 2016 experiment
 %   You can run it without any parameters which leads to running in
 %   default non-stereoscopic mode. Otherwise use prepared GUI to run it.
@@ -14,10 +14,20 @@ function Stereo(subject)
 % <michtesar@gmail.com>
 % 2017, Prague
 
+% Get subject credentials
+prompt = {'Subject number:','Age:','Sex:'};
+dlg_title = 'Subject info';
+num_lines = 1;
+defaultans = {'0','0', 'M'};
+answer = inputdlg(prompt,dlg_title,num_lines,defaultans);
+
 load src/source.mat;
 
-if nargin < 1
-    subject = 'default';
+% Create subject logfile
+try
+    subject = sprintf('S%s_%s%s_%s', answer{1}, answer{3}, answer{2}, date);
+catch
+    error('Cannot create logfile. Experiment is over...');
 end
 
 % Create a logfile and write a header
