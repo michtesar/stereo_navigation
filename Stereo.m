@@ -68,6 +68,9 @@ Screen('Flip', win);
 KbWait([], 3);
 Screen('Flip', win);
 
+% Start EEG recording
+sendtag(254);
+
 Screen('BeginOpenGL', win);
 
 ar = winRect(4) / winRect(3);
@@ -264,6 +267,9 @@ for trial = 1:height(source)
         error('Cannot append to existing log file!');
     end
 end
+
+% Stop EEG recording
+sendtag(255);
 
 % Ending instructions
 instructionText = 'This is end of experiment\nFinish it with ANY key...';
