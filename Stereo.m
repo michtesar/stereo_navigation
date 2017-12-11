@@ -98,7 +98,7 @@ for trial = 1:height(source)
     
     % Give instuction for a block if any
     if source.Pause(trial)
-        instructionText = sprintf('Closer to %s\n\n\nPress RIGHT arrow to continue\n\n\n%d - %d / 8', char(source.Type(trial)), source.Repetition(trial), source.BlockRepetition(trial));
+        instructionText = sprintf('%s\n\n\nPress RIGHT arrow to continue\n\n\n%d - %d / 8', char(source.Type(trial)), source.Repetition(trial), source.BlockRepetition(trial));
         DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
         Screen('Flip', win);
         while 1
