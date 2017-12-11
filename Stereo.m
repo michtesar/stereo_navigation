@@ -65,8 +65,8 @@ Screen('TextSize', win, 30);
 instructionText = 'Hello!\nThank you for your time in participation in navigation experiment\nDecide which sphere is closer to reference point which you will see on following screen.\nYou can answer with LEFT or RIGHT key.\n\nPress ANY key to continue...';
 DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
 Screen('Flip', win);
-KbWait;
-WaitSecs(0.1);
+KbWait([], 3);
+Screen('Flip', win);
 
 Screen('BeginOpenGL', win);
 
