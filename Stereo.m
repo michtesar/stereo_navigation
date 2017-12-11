@@ -113,6 +113,11 @@ for trial = 1:height(source)
         
     end
     
+    % Draw fixation cross for t = 1500 ms
+    DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
+    Screen('Flip', win);
+    WaitSecs(1.5);
+    
     for view = 0:1
         Screen('SelectStereoDrawbuffer', win, view);
         Screen('BeginOpenGL', win);
@@ -193,6 +198,12 @@ for trial = 1:height(source)
         warning('Cannot send response tag');
     end
     
+    % Show fixation cross for t = 500 ms
+    DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
+    Screen('Flip', win);
+    WaitSecs(0.5);
+    
+    % If defined show feedback of single trial for t = 500 ms
     if source.Feedback(trial)
         if correctAnswer
             DrawFormattedText(win, 'Correct!', 'center', 'center', [1 1 1]);
@@ -202,11 +213,6 @@ for trial = 1:height(source)
         Screen('Flip', win);
         WaitSecs(0.5);
     end
-    
-    % Show black screen for baseline t = 500 - 1000 ms (random)
-    DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
-    Screen('Flip', win);
-    WaitSecs(0.5+rand);
     
     % Give feedback if training
     if source.BlockEnd(trial)
