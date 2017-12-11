@@ -162,6 +162,7 @@ for trial = 1:height(source)
     % Draw whole scene on screen
     onset = Screen('Flip', win);
     
+    KbWait([], 2);
     while 1
         [keyIsDown, reaction, keyCode] = KbCheck;
         rt = (reaction-onset)*1000;
@@ -231,6 +232,7 @@ for trial = 1:height(source)
         correct = 0;
         blockIndex = 0;
         Screen('Flip', win);
+        KbWait([], 2);
         while 1
             [keyIsDown, ~, keyCode] = KbCheck;
             if keyIsDown
