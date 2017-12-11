@@ -182,6 +182,8 @@ for trial = 1:height(source)
         end
     end
     
+    Screen('Flip', win);
+    
     % Decide if response was correct or not
     if strcmp(resp, char(source.CorrectAnswer(trial)))
         correctAnswer = true;
