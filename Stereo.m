@@ -151,7 +151,6 @@ for trial = 1:height(source)
     end
     
     Screen('DrawingFinished', win, 2);
-    onset = Screen('Flip', win);
     
     % Send onset tag of scene
     try
@@ -159,6 +158,9 @@ for trial = 1:height(source)
     catch
         warning('Cannot send scene onset tag')
     end
+    
+    % Draw whole scene on screen
+    onset = Screen('Flip', win);
     
     while 1
         [keyIsDown, reaction, keyCode] = KbCheck;
