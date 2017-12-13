@@ -241,10 +241,14 @@ for trial = 1:height(source)
     
     % Give feedback if training
     if source.BlockEnd(trial)
-        instructionText = sprintf('Which block was presented?\n\nLEFT closer to you\nRIGHT closer to mark\nUP closer to red sphere\n\n\nScore: %.0f %% from %.0f trials\nMissed: %d\nAverage RT: %.0f ms',...
+%         instructionText = sprintf('Which block was presented?\n\%c      closer to you\n%c      closer to mark\n%c      red sphere\n\n\nScore: %.0f %% from %.0f trials\nMissed: %d\nAverage RT: %.0f ms',...
+%             8592, 8594, 9593, (correct/blockIndex)*100, blockIndex, missed, averageRT/(blockIndex-missed));
+        instructionText = sprintf('Which block was presented?\n %c closet to you\n%c closet to yellow mark\n%c red sphere',...
+            8592, 8594, 9593);
+        DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1]);
+        scoreText = sprintf('Score: %.0f %% from %.0f trials\nMissed: %d\nAverage RT: %.0f ms',...
             (correct/blockIndex)*100, blockIndex, missed, averageRT/(blockIndex-missed));
-        DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
-        
+        DrawFormattedText(win, scoreText, 'center', winRect(4) - 200, [0 1 0]);
         % Reset feedback variables
         correct = 0;
         blockIndex = 0;
