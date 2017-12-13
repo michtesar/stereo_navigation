@@ -161,29 +161,46 @@ for trial = 1:height(source)
     end
     
     % Draw whole scene on screen
-    onset = Screen('Flip', win);
+    arenaOnset = Screen('Flip', win);
     
-    KbWait([], 2);
-    while 1
-        [keyIsDown, reaction, keyCode] = KbCheck;
-        rt = (reaction-onset)*1000;
-        averageRT = averageRT + rt;
-        if keyIsDown
-            if keyCode(KbName('ESCAPE'))
-                ListenChar(0);
-                ShowCursor();
-                sca;
-                break
-            elseif keyCode(KbName('LeftArrow'))
-                resp = 'left';
-                break
-            elseif keyCode(KbName('RightArrow'))
-                resp = 'right';
-                break
-            end
+    t = 1.5;
+    rtMs = 0;
+    resp = 'None';
+    
+    % Wait for first input (reaction on arena screen) up to 1500 ms
+    [arenaSec, keyCode, ~] = KbWait([], [], arenaOnset+t);
+    WaitSecs((t) - (arenaSec - arenaOnset));
+    if find(keyCode == 1)
+        rtMs = (arenaSec - arenaOnset) * 1000;
+        resp = KbName(keyCode == 1);
+    end
+    
+    % Draw fixation cross up to 1500 ms for alte response
+    DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
+    lateOnset = Screen('Flip', win);
+    [lateSec, keyCode, ~] = KbWait([], [], lateOnset+t);
+    WaitSecs((t) - (lateSec - lateOnset));
+    if rtMs == 0
+        if find(keyCode == 1)
+            rtMs = (lateSec - lateOnset) * 1000;
+            resp = KbName(keyCode == 1);
         end
     end
     
+    if strcmp(resp, 'LeftArrow')
+        resp = 'left';
+    elseif strcmp(resp, 'RightArrow')
+        resp = 'right';
+    end
+    
+    % Close experiment if ESCAPE was pressed
+    if strcmp(resp, 'ESCAPE')
+        ListenChar(0);
+        ShowCursor();
+        break
+    end
+    
+    averageRT = averageRT + rtMs;
     Screen('Flip', win);
     
     % Decide if response was correct or not
@@ -267,7 +284,7 @@ for trial = 1:height(source)
             source.WhiteX(trial), source.WhiteY(trial),...
             source.WhiteZ(trial), source.Pitch(trial),...
             source.Roll(trial), source.Yaw(trial), resp,...
-            rt, onset, source.Name{trial}, correctAnswer);
+            rtMs, arenaOnset, source.Name{trial}, correctAnswer);
     catch
         sca;
         fclose(log);
