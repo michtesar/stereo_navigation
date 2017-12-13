@@ -13,17 +13,33 @@ for trial=1:2 %runs 5 trials
     Screen('DrawTexture', window, tex(1), []); %draws to backbuffer
     WaitSecs(rand+.5) %jitters prestim interval between .5 and 1.5 seconds
 
-    starttime=Screen('Flip',window); %swaps backbuffer to frontbuffer
+    rtMs = 0;
+    rtFeedback = 'No response';
+    
+    stimuliOnset=Screen('Flip',window); %swaps backbuffer to frontbuffer
     
     t = 1.5;
-    [secs, keyCode, deltaSecs] = KbWait([], [], starttime+t);
-    WaitSecs((t)-(secs-starttime));
+    [stimSecs, keyCode, deltaSecs] = KbWait([], [], stimuliOnset+t);
+    WaitSecs((t)-(stimSecs-stimuliOnset));
     if find(keyCode == 1)
-        RTtext = sprintf('%.2f ms',(secs-starttime)*1000);
-    else
-        RTtext = 'No response';
+        rtMs = (stimSecs - stimuliOnset) * 1000;
     end
-    DrawFormattedText(window,RTtext, 'center'  ,'center',[255 0 255]); %shows RT
+    
+    DrawFormattedText(window, '+', 'center', 'center', [0 0 0]);
+    fixationOnset = Screen('Flip', window);
+    [fixationSecs, keyCode, deltaSecs] = KbWait([], [], fixationOnset+t);
+    WaitSecs((t)-(fixationSecs-fixationOnset));
+    if rtMs == 0
+        if find(keyCode == 1)
+            rtMs = (fixationSecs-stimuliOnset) * 1000;
+        end
+    end
+    
+    if rtMs > 0
+        rtFeedback = sprintf('RT: %.f ms', rtMs);
+    end
+    
+    DrawFormattedText(window,rtFeedback, 'center'  ,'center',[255 0 255]); %shows RT
     vbl=Screen('Flip',window); %swaps backbuffer to frontbuffer
     Screen('Flip',window,vbl+1); %erases feedback after 1 second
 end
