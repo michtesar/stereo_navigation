@@ -114,6 +114,12 @@ for trial = 1:height(source)
         end
         Screen('Flip', win);
         
+        % Draw fixation cross to start new block with focus on screen
+        DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
+        Screen('Flip', win);
+        WaitSecs(2);
+        Screen('Flip', win);
+        
     end
     
     % Draw fixation cross for t = 1500 ms
