@@ -270,14 +270,7 @@ for trial = 1:height(source)
                 end
             end
         end
-        Screen('Flip', win);
-        WaitSecs(0.1);
-        Screen('Flip', win);
-        
-        DrawFormattedText(win, 'How confident you have felt you guess?\n1 - I only guess ... 5 - I am sure', 'center', 'center', [1 1 1]);
-        Screen('Flip', win);
-        KbWait;
-        WaitSecs(0.1);
+        Screen('Flip', win);  
     end
     
     Screen('BeginOpenGL', win);
