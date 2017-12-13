@@ -94,6 +94,7 @@ glClear;
 correct = 0;
 blockIndex = 0;
 averageRT = 0;
+missed = 0;
 
 for trial = 1:height(source)
     blockIndex = blockIndex + 1;
@@ -181,7 +182,7 @@ for trial = 1:height(source)
     WaitSecs((t) - (lateSec - lateOnset));
     if rtMs == 0
         if find(keyCode == 1)
-            rtMs = (lateSec - lateOnset) * 1000;
+            rtMs = (lateSec - arenaOnset) * 1000;
             resp = KbName(keyCode == 1);
         end
     end
@@ -190,6 +191,8 @@ for trial = 1:height(source)
         resp = 'left';
     elseif strcmp(resp, 'RightArrow')
         resp = 'right';
+    elseif strcmp(resp, 'None') 
+        missed = missed + 1;
     end
     
     % Close experiment if ESCAPE was pressed
@@ -199,7 +202,9 @@ for trial = 1:height(source)
         break
     end
     
-    averageRT = averageRT + rtMs;
+    if rtMs > 0
+        averageRT = averageRT + rtMs;
+    end
     Screen('Flip', win);
     
     % Decide if response was correct or not
@@ -236,14 +241,17 @@ for trial = 1:height(source)
     
     % Give feedback if training
     if source.BlockEnd(trial)
-        % TODO: Compute missing trials and log them. Get correct reaction
-        % time to display.
-        instructionText = sprintf('Which block was presented?\n\nLEFT closer to you\nRIGHT closer to mark\nUP closer to red sphere\n\n\nScore: %d %% from %d trials\nMissing: %d\nAverage RT: %.2f ms',...
-            correct/blockIndex*100, blockIndex, 0, averageRT/blockIndex);
+        instructionText = sprintf('Which block was presented?\n\nLEFT closer to you\nRIGHT closer to mark\nUP closer to red sphere\n\n\nScore: %.0f %% from %.0f trials\nMissed: %d\nAverage RT: %.0f ms',...
+            (correct/blockIndex)*100, blockIndex, missed, averageRT/(blockIndex-missed));
         DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
+        
+        % Reset feedback variables
         correct = 0;
         blockIndex = 0;
+        missed = 0;
+        averageRT = 0;
         Screen('Flip', win);
+       
         KbWait([], 2);
         while 1
             [keyIsDown, ~, keyCode] = KbCheck;
