@@ -35,7 +35,8 @@ try
     log = fopen([subject, '.csv'], 'wt');
     fprintf(log, ['RedX, RedY, RedZ, WhiteX, WhiteY,',...
         'WhiteZ, CameraPitch, CameraRoll, CameraYaw,',...
-        'Response, RTms, StimOnsetClock, Name, IsCorrect\n']);
+        'Response, RTms, StimOnsetClock, Name, IsCorrect,',...
+        'BlockAnswer, Missed, ResponseOnsetClock, TaskType\n']);
 catch
     error('Cannot write or open a logfile!');
 end
@@ -98,6 +99,9 @@ missed = 0;
 
 for trial = 1:height(source)
     blockIndex = blockIndex + 1;
+    blockAnswer = 'None';
+    miss = 0;
+    responseTimestamp = 0;
     Screen('EndOpenGL', win);
     
     % Give instuction for a block if any
@@ -174,6 +178,7 @@ for trial = 1:height(source)
     if find(keyCode == 1)
         rtMs = (arenaSec - arenaOnset) * 1000;
         resp = KbName(keyCode == 1);
+        responseTimestamp = arenaSec;
     end
     
     % Draw fixation cross up to 1500 ms for alte response
@@ -185,6 +190,7 @@ for trial = 1:height(source)
         if find(keyCode == 1)
             rtMs = (lateSec - arenaOnset) * 1000;
             resp = KbName(keyCode == 1);
+            responseTimestamp = lateSec;
         end
     end
     
@@ -194,6 +200,7 @@ for trial = 1:height(source)
         resp = 'right';
     elseif strcmp(resp, 'None') 
         missed = missed + 1;
+        miss = 1;
     end
     
     % Close experiment if ESCAPE was pressed
@@ -240,8 +247,6 @@ for trial = 1:height(source)
     
     % Give feedback if training
     if source.BlockEnd(trial)
-%         instructionText = sprintf('Which block was presented?\n\%c      closer to you\n%c      closer to mark\n%c      red sphere\n\n\nScore: %.0f %% from %.0f trials\nMissed: %d\nAverage RT: %.0f ms',...
-%             8592, 8594, 9593, (correct/blockIndex)*100, blockIndex, missed, averageRT/(blockIndex-missed));
         instructionText = sprintf('Which block was presented?\n %c      closer to you\n%c      closer to yellow mark\n%c      red sphere',...
             9668, 9658, 9650);
         DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 5);
@@ -261,10 +266,13 @@ for trial = 1:height(source)
             [keyIsDown, ~, keyCode] = KbCheck;
             if keyIsDown
                 if keyCode(KbName('RightArrow'))
+                    blockAnswer = 'Mark';
                     break
                 elseif keyCode(KbName('LeftArrow'))
+                    blockAnswer = 'You';
                     break
                 elseif keyCode(KbName('UpArrow'))
+                    blockAnswer = 'Sphere';
                     break
                 end
             end
@@ -276,12 +284,13 @@ for trial = 1:height(source)
  
     % Append to logfile experiment variables
     try
-        fprintf(log, '%0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %s, %0.4f, %0.4f, %s, %d\n',...
+        fprintf(log, '%0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %s, %0.4f, %0.4f, %s, %d, %s, %d, %d, %s\n',...
             source.RedX(trial), source.RedY(trial), source.RedZ(trial),...
             source.WhiteX(trial), source.WhiteY(trial),...
             source.WhiteZ(trial), source.Pitch(trial),...
             source.Roll(trial), source.Yaw(trial), resp,...
-            rtMs, arenaOnset, source.Name{trial}, correctAnswer);
+            rtMs, arenaOnset, source.Name{trial}, correctAnswer,...
+            blockAnswer, miss, responseTimestamp, char(source.Type(trial)));
     catch
         sca;
         fclose(log);
