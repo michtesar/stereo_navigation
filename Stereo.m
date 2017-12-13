@@ -347,6 +347,10 @@ glPushMatrix;
 floor = gluNewQuadric;
 gluQuadricTexture(floor, GL.TRUE);
 glRotatef(90, 1, 0, 0);
+
+% Randomly rotate floor texture
+glRotatef(randi(360), 0, 0, 1);
+
 gluDisk(floor, 0, r, 100, 100);
 glPopMatrix;
 
