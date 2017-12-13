@@ -1,4 +1,4 @@
-function Stereo
+function Stereo_Czech(subjectId, subjectSex, subjectAge)
 % STEREOPILOT2 is PsychToolbox implementation of AEDist 2016 experiment
 %   You can run it without any parameters which leads to running in
 %   default non-stereoscopic mode. Otherwise use prepared GUI to run it.
@@ -14,20 +14,13 @@ function Stereo
 % <michtesar@gmail.com>
 % 2017, Prague
 
-% Get subject credentials
-prompt = {'Subject number:','Age:','Sex:'};
-dlg_title = 'Subject info';
-num_lines = 1;
-defaultans = {'0','0', 'M'};
-answer = inputdlg(prompt,dlg_title,num_lines,defaultans);
-
 load src/source.mat;
 
 % Create subject logfile
 try
-    subject = sprintf('S%s_%s%s_%s', answer{1}, answer{3}, answer{2}, date);
+    subject = sprintf('S%d_%s%d_%s', subjectId, subjectSex, subjectAge, date);
 catch
-    error('Cannot create logfile. Experiment is over...');
+    error('Nelze inicializovat logfile. Experiment nezaène...');
 end
 
 % Create a logfile and write a header
@@ -63,8 +56,8 @@ texWall = Screen('MakeTexture', win, imgWall, [], 1);
 Screen('TextSize', win, 30);
 
 % Show initial instructions
-instructionText = 'Hello!\nThank you for your time in participation in navigation experiment\nDecide which sphere is closer to reference point which you will see on following screen.\nYou can answer with LEFT or RIGHT key.\n\nPress ANY key to continue...';
-DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+instructionText = 'Dobrý den!\nDìkujeme za Váš èas pøi úèasti na výzkumu navigace v prostoru.\nRozhodnìte, která koule je blíže podle instrukcí na obrazovce.\nOdpovídat mùžete LEVOU a PRAVOU šipkou.\n\nStisknìte LIBOVOLNOU klávesu pro pokraèování...';
+DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 2);
 Screen('Flip', win);
 KbWait([], 3);
 Screen('Flip', win);
@@ -106,8 +99,8 @@ for trial = 1:height(source)
     
     % Give instuction for a block if any
     if source.Pause(trial)
-        instructionText = sprintf('%s\n\n\nPress RIGHT arrow to continue\n\n\n%d - %d / 8', char(source.Type(trial)), source.Repetition(trial), source.BlockRepetition(trial));
-        DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+        instructionText = sprintf('%s\n\n\nStiknìte PRAVOU šipku pro pokraèování\n\n\n%d - %d / 8', source.TypeCS{trial}, source.Repetition(trial), source.BlockRepetition(trial));
+        DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 2);
         Screen('Flip', win);
         KbWait([], 2);
         while 1
@@ -162,7 +155,7 @@ for trial = 1:height(source)
     try
         sendtag(10);
     catch
-        warning('Cannot send scene onset tag')
+        warning('Nelze poslat EEG znaèku')
     end
     
     % Draw whole scene on screen
@@ -231,15 +224,15 @@ for trial = 1:height(source)
             sendtag(2);
         end
     catch
-        warning('Cannot send response tag');
+        warning('Nelze poslat EEG zanèku odpovìdi');
     end
      
     % If defined show feedback of single trial for t = 500 ms
     if source.Feedback(trial)
         if correctAnswer
-            DrawFormattedText(win, 'Correct!', 'center', 'center', [1 1 1]);
+            DrawFormattedText(win, double('Správnì!'), 'center', 'center', [1 1 1]);
         else
-            DrawFormattedText(win, 'Wrong!', 'center', 'center', [1 1 1]);
+            DrawFormattedText(win, double('Špatnì!'), 'center', 'center', [1 1 1]);
         end
         Screen('Flip', win);
         WaitSecs(0.5);
@@ -247,12 +240,12 @@ for trial = 1:height(source)
     
     % Give feedback if training
     if source.BlockEnd(trial)
-        instructionText = sprintf('Which block was presented?\n %c      closer to you\n%c      closer to yellow mark\n%c      red sphere',...
+        instructionText = sprintf('O který blok se jednalo?\n %c      blíže k Vám\n%c      blíže ke žluté znaèce\n%c      èervená koule',...
             9668, 9658, 9650);
         DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 5);
-        scoreText = sprintf('Score: %.0f %% from %.0f trials\nMissed: %d\nAverage RT: %.0f ms',...
+        scoreText = sprintf('Skóre: %.0f %% z %.0f pokusù\nVynechaných: %d\nPrùmìrný reakèní èas: %.0f ms',...
             (correct/blockIndex)*100, blockIndex, missed, averageRT/(blockIndex-missed));
-        DrawFormattedText(win, scoreText, 'center', winRect(4) - 200, [0 1 0], [], [], [], 2);
+        DrawFormattedText(win, double(scoreText), 'center', winRect(4) - 200, [0 1 0], [], [], [], 2);
         
         % Reset feedback variables
         correct = 0;
@@ -294,7 +287,7 @@ for trial = 1:height(source)
     catch
         sca;
         fclose(log);
-        error('Cannot append to existing log file!');
+        error('Nemohu zapsat další záznamy do logfile!');
     end
 end
 
@@ -302,8 +295,8 @@ end
 sendtag(255);
 
 % Ending instructions
-instructionText = 'This is end of experiment\nFinish it with ANY key...';
-DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+instructionText = 'Experiment je u konce\nUkonèíte jej stiknutím LIBOVOLNÉ klávesy...';
+DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 2);
 Screen('Flip', win);
 KbWait;
 
