@@ -105,6 +105,7 @@ for trial = 1:height(source)
         instructionText = sprintf('%s\n\n\nPress RIGHT arrow to continue\n\n\n%d - %d / 8', char(source.Type(trial)), source.Repetition(trial), source.BlockRepetition(trial));
         DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
         Screen('Flip', win);
+        KbWait([], 2);
         while 1
             [keyIsDown, ~, keyCode] = KbCheck;
             if keyIsDown
