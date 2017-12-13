@@ -197,8 +197,6 @@ for trial = 1:height(source)
     
     % Close experiment if ESCAPE was pressed
     if strcmp(resp, 'ESCAPE')
-        ListenChar(0);
-        ShowCursor();
         break
     end
     
