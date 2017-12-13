@@ -63,7 +63,7 @@ Screen('TextSize', win, 30);
 
 % Show initial instructions
 instructionText = 'Hello!\nThank you for your time in participation in navigation experiment\nDecide which sphere is closer to reference point which you will see on following screen.\nYou can answer with LEFT or RIGHT key.\n\nPress ANY key to continue...';
-DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
+DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
 Screen('Flip', win);
 KbWait([], 3);
 Screen('Flip', win);
@@ -103,7 +103,7 @@ for trial = 1:height(source)
     % Give instuction for a block if any
     if source.Pause(trial)
         instructionText = sprintf('%s\n\n\nPress RIGHT arrow to continue\n\n\n%d - %d / 8', char(source.Type(trial)), source.Repetition(trial), source.BlockRepetition(trial));
-        DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
+        DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
         Screen('Flip', win);
         while 1
             [keyIsDown, ~, keyCode] = KbCheck;
@@ -245,10 +245,11 @@ for trial = 1:height(source)
 %             8592, 8594, 9593, (correct/blockIndex)*100, blockIndex, missed, averageRT/(blockIndex-missed));
         instructionText = sprintf('Which block was presented?\n %c closet to you\n%c closet to yellow mark\n%c red sphere',...
             8592, 8594, 9593);
-        DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1]);
+        DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 2);
         scoreText = sprintf('Score: %.0f %% from %.0f trials\nMissed: %d\nAverage RT: %.0f ms',...
             (correct/blockIndex)*100, blockIndex, missed, averageRT/(blockIndex-missed));
-        DrawFormattedText(win, scoreText, 'center', winRect(4) - 200, [0 1 0]);
+        DrawFormattedText(win, scoreText, 'center', winRect(4) - 200, [0 1 0], [], [], [], 2);
+        
         % Reset feedback variables
         correct = 0;
         blockIndex = 0;
@@ -275,8 +276,6 @@ for trial = 1:height(source)
         
         DrawFormattedText(win, 'How confident you have felt you guess?\n1 - I only guess ... 5 - I am sure', 'center', 'center', [1 1 1]);
         Screen('Flip', win);
-        % TODO: Get specific keyboard response, log it and maybe do some
-        % likert scale like template over it to be precise...
         KbWait;
         WaitSecs(0.1);
     end
@@ -303,7 +302,7 @@ sendtag(255);
 
 % Ending instructions
 instructionText = 'This is end of experiment\nFinish it with ANY key...';
-DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1]);
+DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
 Screen('Flip', win);
 KbWait;
 
