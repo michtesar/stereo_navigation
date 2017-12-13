@@ -118,8 +118,7 @@ for trial = 1:height(source)
         DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
         Screen('Flip', win);
         WaitSecs(2);
-        Screen('Flip', win);
-        
+        Screen('Flip', win);       
     end
     
     for view = 0:1
@@ -223,12 +222,7 @@ for trial = 1:height(source)
     catch
         warning('Cannot send response tag');
     end
-    
-    % Show fixation cross for t = 1500 ms
-    DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
-    Screen('Flip', win);
-    WaitSecs(1.5);
-    
+     
     % If defined show feedback of single trial for t = 500 ms
     if source.Feedback(trial)
         if correctAnswer
