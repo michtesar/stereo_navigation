@@ -174,37 +174,54 @@ for trial = 1:height(source)
     t = 1.5;
     rtMs = 0;
     resp = 'None';
+    correctKeyBySource = char(source.CorrectAnswer(trial));
     
     % Wait for first input (reaction on arena screen) up to 1500 ms
     [arenaSec, keyCode, ~] = KbWait([], [], arenaOnset+t);
-    WaitSecs((t) - (arenaSec - arenaOnset));
     if find(keyCode == 1)
+        resp = KbName(keyCode==1);
+        if strcmp(correctKeyBySource, resp)
+            sendtag(1);
+            correct = correct + 1;
+            correctAnswer = true;
+        else
+            sendtag(2);
+            correctAnswer = false;
+        end
+        clear keyCode;
         rtMs = (arenaSec - arenaOnset) * 1000;
-        resp = KbName(keyCode == 1);
         responseTimestamp = arenaSec;
     end
+    
+    WaitSecs((t) - (arenaSec - arenaOnset));
     
     % Draw fixation cross up to 1500 ms for alte response
     for view = 0:1
         Screen('SelectStereoDrawbuffer', win, view);
         DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
     end
+    
     lateOnset = Screen('Flip', win);
     [lateSec, keyCode, ~] = KbWait([], [], lateOnset+t);
-    WaitSecs((t) - (lateSec - lateOnset));
-    if rtMs == 0
-        if find(keyCode == 1)
+    if find(keyCode == 1)
+        if rtMs == 0
+            resp = KbName(keyCode==1);
+            if strcmp(correctKeyBySource, resp)
+                sendtag(1);
+                correct = correct + 1;
+                correctAnswer = true;
+            else
+                sendtag(2);
+                correctAnswer = false;
+            end
+            clear keyCode;
             rtMs = (lateSec - arenaOnset) * 1000;
-            resp = KbName(keyCode == 1);
             responseTimestamp = lateSec;
         end
     end
+    WaitSecs((t) - (lateSec - lateOnset));
     
-    if strcmp(resp, 'LeftArrow')
-        resp = 'left';
-    elseif strcmp(resp, 'RightArrow')
-        resp = 'right';
-    elseif strcmp(resp, 'None') 
+    if rtMs == 0
         missed = missed + 1;
         miss = 1;
     end
@@ -218,27 +235,6 @@ for trial = 1:height(source)
         averageRT = averageRT + rtMs;
     end
     Screen('Flip', win);
-    
-    % Decide if response was correct or not
-    if strcmp(resp, char(source.CorrectAnswer(trial)))
-        correctAnswer = true;
-        correct = correct + 1;
-    else
-        correctAnswer = false;
-    end
-    
-    % Send response tag based on pressed key
-    %   1 - Correct answer
-    %   2 - Incorrect answer
-    try
-        if correctAnswer
-            sendtag(1);
-        else
-            sendtag(2);
-        end
-    catch
-        warning('Cannot send response tag');
-    end
      
     % If defined show feedback of single trial for t = 500 ms
     if source.Feedback(trial)
