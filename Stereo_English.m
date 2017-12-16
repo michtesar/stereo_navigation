@@ -57,7 +57,10 @@ Screen('TextSize', win, 30);
 
 % Show initial instructions
 instructionText = 'Hello!\nThank you for your time in participation in navigation experiment\nDecide which sphere is closer to reference point which you will see on following screen.\nYou can answer with LEFT or RIGHT key.\n\nPress ANY key to continue...';
-DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+for view = 0:1
+    Screen('SelectStereoDrawbuffer', win, view);
+    DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+end
 Screen('Flip', win);
 KbWait([], 3);
 Screen('Flip', win);
@@ -100,7 +103,10 @@ for trial = 1:height(source)
     % Give instuction for a block if any
     if source.Pause(trial)
         instructionText = sprintf('%s\n\n\nPress RIGHT arrow to continue\n\n\n%d - %d / 8', char(source.Type(trial)), source.Repetition(trial), source.BlockRepetition(trial));
-        DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+        for view = 0:1
+            Screen('SelectStereoDrawbuffer', win, view);
+            DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+        end
         Screen('Flip', win);
         KbWait([], 2);
         while 1
@@ -114,7 +120,10 @@ for trial = 1:height(source)
         Screen('Flip', win);
         
         % Draw fixation cross to start new block with focus on screen
-        DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
+        for view = 0:1
+            Screen('SelectStereoDrawbuffer', win, view);
+            DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
+        end
         Screen('Flip', win);
         WaitSecs(2);
         Screen('Flip', win);       
@@ -175,7 +184,10 @@ for trial = 1:height(source)
     end
     
     % Draw fixation cross up to 1500 ms for alte response
-    DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
+    for view = 0:1
+        Screen('SelectStereoDrawbuffer', win, view);
+        DrawFormattedText(win, '+', 'center', 'center', [1 1 1]);
+    end
     lateOnset = Screen('Flip', win);
     [lateSec, keyCode, ~] = KbWait([], [], lateOnset+t);
     WaitSecs((t) - (lateSec - lateOnset));
@@ -230,9 +242,15 @@ for trial = 1:height(source)
     % If defined show feedback of single trial for t = 500 ms
     if source.Feedback(trial)
         if correctAnswer
-            DrawFormattedText(win, 'Correct!', 'center', 'center', [1 1 1]);
+            for view = 0:1
+                Screen('SelectStereoDrawbuffer', win, view);
+                DrawFormattedText(win, 'Correct!', 'center', 'center', [1 1 1]);
+            end
         else
-            DrawFormattedText(win, 'Wrong!', 'center', 'center', [1 1 1]);
+            for view = 0:1
+                Screen('SelectStereoDrawbuffer', win, view);
+                DrawFormattedText(win, 'Wrong!', 'center', 'center', [1 1 1]);
+            end
         end
         Screen('Flip', win);
         WaitSecs(0.5);
@@ -242,11 +260,17 @@ for trial = 1:height(source)
     if source.BlockEnd(trial)
         instructionText = sprintf('Which block was presented?\n %c      closer to you\n%c      closer to yellow mark\n%c      red sphere',...
             9668, 9658, 9650);
-        DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 5);
+        for view = 0:1
+            Screen('SelectStereoDrawbuffer', win, view);
+            DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 5);
+        end
         scoreText = sprintf('Score: %.0f %% from %.0f trials\nMissed: %d\nAverage RT: %.0f ms',...
             (correct/blockIndex)*100, blockIndex, missed, averageRT/(blockIndex-missed));
-        DrawFormattedText(win, scoreText, 'center', winRect(4) - 200, [0 1 0], [], [], [], 2);
         
+        for view = 0:1
+            Screen('SelectStereoDrawbuffer', win, view);
+            DrawFormattedText(win, scoreText, 'center', winRect(4) - 200, [0 1 0], [], [], [], 2);
+        end
         % Reset feedback variables
         correct = 0;
         blockIndex = 0;
@@ -296,7 +320,10 @@ sendtag(255);
 
 % Ending instructions
 instructionText = 'This is end of experiment\nFinish it with ANY key...';
-DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+for view = 0:1
+    Screen('SelectStereoDrawbuffer', win, view);
+    DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+end
 Screen('Flip', win);
 KbWait;
 
