@@ -174,6 +174,7 @@ for trial = 1:height(source)
     rtMs = 0;
     resp = 'None';
     correctKeyBySource = char(source.CorrectAnswer(trial));
+    correctAnswer = false;
     
     % Wait for first input (reaction on arena screen) up to 1500 ms
     [arenaSec, keyCode, ~] = KbWait([], [], arenaOnset+t);
@@ -185,7 +186,6 @@ for trial = 1:height(source)
             correctAnswer = true;
         else
             sendtag(2);
-            correctAnswer = false;
         end
         clear keyCode;
         rtMs = (arenaSec - arenaOnset) * 1000;
@@ -211,7 +211,6 @@ for trial = 1:height(source)
                 correctAnswer = true;
             else
                 sendtag(2);
-                correctAnswer = false;
             end
             clear keyCode;
             rtMs = (lateSec - arenaOnset) * 1000;
@@ -253,7 +252,7 @@ for trial = 1:height(source)
     
     % Give feedback if training
     if source.BlockEnd(trial)
-        instructionText = sprintf('Which block was presented?\n %c      closer to you\n%c      closer to yellow mark\n%c      red sphere',...
+        instructionText = sprintf('Which block was presented?\n %c      closer to you\n%c      closer to yellow mark\n%c      red sphere\n SPACE       not sure',...
             9668, 9658, 9650);
         for view = 0:1
             Screen('SelectStereoDrawbuffer', win, view);
@@ -264,7 +263,7 @@ for trial = 1:height(source)
         
         for view = 0:1
             Screen('SelectStereoDrawbuffer', win, view);
-            DrawFormattedText(win, scoreText, 'center', winRect(4) - 200, [0 1 0], [], [], [], 2);
+            DrawFormattedText(win, scoreText, 'center', winRect(4) - 150, [0 1 0], [], [], [], 2);
         end
         % Reset feedback variables
         correct = 0;
@@ -285,6 +284,9 @@ for trial = 1:height(source)
                     break
                 elseif keyCode(KbName('UpArrow'))
                     blockAnswer = 'Sphere';
+                    break
+                elseif keyCode(KbName('SPACE'))
+                    blockAnswer = 'not sure';
                     break
                 end
             end
