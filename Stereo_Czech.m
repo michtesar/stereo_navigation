@@ -316,6 +316,8 @@ end
 % Stop EEG recording
 sendtag(255);
 
+Screen('EndOpenGL', win);
+
 % Ending instructions
 instructionText = 'Experiment je u konce\nUkonèete jej stiknutím LIBOVOLNÉ klávesy...';
 for view = 0:1
