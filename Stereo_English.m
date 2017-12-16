@@ -127,7 +127,6 @@ for trial = 1:height(source)
         end
         Screen('Flip', win);
         WaitSecs(2);
-        Screen('Flip', win);       
     end
     
     for view = 0:1
@@ -234,7 +233,6 @@ for trial = 1:height(source)
     if rtMs > 0
         averageRT = averageRT + rtMs;
     end
-    Screen('Flip', win);
      
     % If defined show feedback of single trial for t = 500 ms
     if source.Feedback(trial)
