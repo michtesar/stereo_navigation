@@ -404,6 +404,7 @@ wall = gluNewQuadric;
 gluQuadricTexture(wall, GL.TRUE);
 glTranslatef(0, height, 0);
 glRotatef(90, 1, 0, 0);
+glRotatef(180, 0, 0, 1);
 gluCylinder(wall, r, r, height, 100, 100);
 glPopMatrix;
 
