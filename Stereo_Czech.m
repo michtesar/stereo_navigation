@@ -1,4 +1,4 @@
-function Stereo_English(subjectId, subjectSex, subjectAge)
+function Stereo_Czech(subjectId, subjectSex, subjectAge)
 % STEREOPILOT2 is PsychToolbox implementation of AEDist 2016 experiment
 %   You can run it without any parameters which leads to running in
 %   default non-stereoscopic mode. Otherwise use prepared GUI to run it.
@@ -54,6 +54,7 @@ texWall = Screen('MakeTexture', win, imgWall, [], 1);
 [gltexWall, gltextargetWall] = Screen('GetOpenGLTexture', win, texWall);
 
 Screen('TextSize', win, 30);
+Screen('TextFont', win, 'calibri');
 
 % Show initial instructions
 instructionText = 'Dobrý den!\nDìkujeme za Váš èas pøi participaci na experimentu prostorové navigace.\nRozhodnìte, která z koulí v arénì je blíže vùèi specifikovanému bodu na obrazovce.\nOdpovídat mùžete pomocí kláves LEVÉ a PRAVÉ šipky.\n\nStisknìte LIBOVOLNOU klávesu pro pokraèování...';
@@ -106,7 +107,7 @@ for trial = 1:height(source)
         instructionText = sprintf('%s\n\n\nStisknìte PRAVOU šipku pro pokraèování\n\n\n%d - %d / 8', char(source.TypeCS(trial)), source.Repetition(trial), source.BlockRepetition(trial));
         for view = 0:1
             Screen('SelectStereoDrawbuffer', win, view);
-            DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+            DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 2);
         end
         Screen('Flip', win);
         KbWait([], 2);
@@ -238,12 +239,12 @@ for trial = 1:height(source)
         if correctAnswer
             for view = 0:1
                 Screen('SelectStereoDrawbuffer', win, view);
-                DrawFormattedText(win, 'Správnì!', 'center', 'center', [1 1 1]);
+                DrawFormattedText(win, double('Správnì!'), 'center', 'center', [1 1 1]);
             end
         else
             for view = 0:1
                 Screen('SelectStereoDrawbuffer', win, view);
-                DrawFormattedText(win, 'Špatnì!', 'center', 'center', [1 1 1]);
+                DrawFormattedText(win, double('Špatnì!'), 'center', 'center', [1 1 1]);
             end
         end
         Screen('Flip', win);
@@ -263,7 +264,7 @@ for trial = 1:height(source)
         
         for view = 0:1
             Screen('SelectStereoDrawbuffer', win, view);
-            DrawFormattedText(win, scoreText, 'center', winRect(4) - 150, [0 1 0], [], [], [], 2);
+            DrawFormattedText(win, double(scoreText), 'center', winRect(4) - 150, [0 1 0], [], [], [], 2);
         end
         % Reset feedback variables
         correct = 0;
@@ -316,10 +317,10 @@ end
 sendtag(255);
 
 % Ending instructions
-instructionText = 'Experiment je u konci\nUkonèete jej stiknutím LIBOVOLNÉ klávesy...';
+instructionText = 'Experiment je u konce\nUkonèete jej stiknutím LIBOVOLNÉ klávesy...';
 for view = 0:1
     Screen('SelectStereoDrawbuffer', win, view);
-    DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+    DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 2);
 end
 Screen('Flip', win);
 KbWait;
