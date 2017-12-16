@@ -140,9 +140,9 @@ for trial = 1:height(source)
         % Set camera angles and draw arena
         setcamera([source.Yaw(trial), source.Pitch(trial), source.Roll(trial)],...
             [source.CameraX(trial), source.CameraY(trial), source.CameraZ(trial)]);
-        if view == 0 && double(source.Stereo(trial)) == 1
+        if view == 0 && source.Stereo(trial) == categorical(1)
             glTranslatef(0.005, 0, 0);
-        elseif view == 1 && double(source.Stereo(trial)) == 1
+        elseif view == 1 && source.Stereo(trial) == categorical(1)
             glTranslatef(-0.005, 0, 0);
         end
         drawarena;
@@ -391,10 +391,6 @@ glPushMatrix;
 floor = gluNewQuadric;
 gluQuadricTexture(floor, GL.TRUE);
 glRotatef(90, 1, 0, 0);
-
-% Randomly rotate floor texture
-glRotatef(randi(360), 0, 0, 1);
-
 gluDisk(floor, 0, r, 100, 100);
 glPopMatrix;
 
