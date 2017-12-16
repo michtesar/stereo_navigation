@@ -98,6 +98,7 @@ for trial = 1:height(source)
     blockAnswer = 'None';
     miss = 0;
     responseTimestamp = 0;
+    floorRotation = randi([-360, 360]);
     Screen('EndOpenGL', win);
     
     % Give instuction for a block if any
@@ -145,7 +146,7 @@ for trial = 1:height(source)
         elseif view == 1 && source.Stereo(trial) == categorical(1)
             glTranslatef(-0.005, 0, 0);
         end
-        drawarena;
+        drawarena(floorRotation);
 
         % Draw spheres
         drawsphere([source.RedX(trial), source.RedY(trial),...
@@ -374,7 +375,7 @@ glutSolidSphere(r, 100, 100);
 glPopMatrix;
 end
 
-function drawarena()
+function drawarena(floorRotation)
 % DRAWARENA draws a floor, walls and mark in arena with textures
 %   drawarena(); draws whole arena
 
@@ -391,6 +392,7 @@ glPushMatrix;
 floor = gluNewQuadric;
 gluQuadricTexture(floor, GL.TRUE);
 glRotatef(90, 1, 0, 0);
+glRotatef(floorRotation, 0, 0, 1);
 gluDisk(floor, 0, r, 100, 100);
 glPopMatrix;
 
