@@ -60,7 +60,7 @@ Screen('TextFont', win, 'calibri');
 instructionText = 'Dobrý den!\nDìkujeme za Váš èas pøi participaci na experimentu prostorové navigace.\nRozhodnìte, která z koulí v arénì je blíže vùèi specifikovanému bodu na obrazovce.\nOdpovídat mùžete pomocí kláves LEVÉ a PRAVÉ šipky.\n\nStisknìte LIBOVOLNOU klávesu pro pokraèování...';
 for view = 0:1
     Screen('SelectStereoDrawbuffer', win, view);
-    DrawFormattedText(win, instructionText, 'center', 'center', [1 1 1], [], [], [], 2);
+    DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 2);
 end
 Screen('Flip', win);
 KbWait([], 3);
