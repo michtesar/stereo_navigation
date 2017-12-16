@@ -227,6 +227,7 @@ for trial = 1:height(source)
     
     % Close experiment if ESCAPE was pressed
     if strcmp(resp, 'ESCAPE')
+        Screen('BeginOpenGL', win);
         break
     end
     
