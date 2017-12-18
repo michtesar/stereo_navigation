@@ -220,7 +220,7 @@ for trial = 1:height(source)
     end
     WaitSecs((t) - (lateSec - lateOnset));
     
-    if rtMs == 0
+    if rtMs == 0 || ~(strcmp('LeftArrow', resp) || strcmp('RightArrow', resp))
         missed = missed + 1;
         miss = 1;
     end
@@ -254,8 +254,8 @@ for trial = 1:height(source)
     
     % Give feedback if training
     if source.BlockEnd(trial)
-        instructionText = sprintf('O jaký blok šlo?\n %c      blíže k Vám\n%c      blíže ke žluté znaèce\n%c      èervená koule\n SPACE       nevím',...
-            9668, 9658, 9650);
+        instructionText = sprintf('O jaký blok šlo?\n %c      blíže k Vám\n%c      blíže ke žluté znaèce\n%c      èervená koule\n MEZERNÍK       nevím',...
+            8592, 8594, 8593);
         for view = 0:1
             Screen('SelectStereoDrawbuffer', win, view);
             DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 5);

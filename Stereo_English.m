@@ -219,7 +219,7 @@ for trial = 1:height(source)
     end
     WaitSecs((t) - (lateSec - lateOnset));
     
-    if rtMs == 0
+    if rtMs == 0 || ~(strcmp('LeftArrow', resp) || strcmp('RightArrow', resp))
         missed = missed + 1;
         miss = 1;
     end
@@ -254,7 +254,7 @@ for trial = 1:height(source)
     % Give feedback if training
     if source.BlockEnd(trial)
         instructionText = sprintf('Which block was presented?\n %c      closer to you\n%c      closer to yellow mark\n%c      red sphere\n SPACE       not sure',...
-            9668, 9658, 9650);
+            8592, 8594, 8593);
         for view = 0:1
             Screen('SelectStereoDrawbuffer', win, view);
             DrawFormattedText(win, double(instructionText), 'center', 'center', [1 1 1], [], [], [], 5);
