@@ -15,10 +15,15 @@ function Stereo_Czech(subjectId, subjectSex, subjectAge)
 % 2017, Prague
 
 load src/source.mat;
+saveBuffer = true;
 
 % Create subject logfile
 try
-    subject = sprintf('S%d_%s%d_%s', subjectId, subjectSex, subjectAge, date);
+    dateTimestamp = datestr(datetime);
+    dateTimestamp = strrep(dateTimestamp, ':', '-');
+    dateTimestamp = strrep(dateTimestamp, ' ', '_');
+    subject = sprintf('%s_%s%d_%s', subjectId, subjectSex,...
+        subjectAge, dateTimestamp);
 catch
     error('Cannot create logfile. Experiment is over...');
 end
@@ -29,7 +34,7 @@ try
     fprintf(log, ['RedX, RedY, RedZ, WhiteX, WhiteY,',...
         'WhiteZ, CameraPitch, CameraRoll, CameraYaw,',...
         'Response, RTms, StimOnsetClock, Name, IsCorrect,',...
-        'BlockAnswer, Missed, ResponseOnsetClock, TaskType\n']);
+        'BlockAnswer, Missed, ResponseOnsetClock, TaskType, Stereo\n']);
 catch
     error('Cannot write or open a logfile!');
 end
@@ -161,15 +166,43 @@ for trial = 1:height(source)
     
     Screen('DrawingFinished', win, 2);
     
+    % Prepare a onset tag value
+    % Red - 1
+    % Closer to you - 2
+    % Closer to yellow mark - 3
+    % Stereo adds 0 (no stereo) or 1 (is stereo)
+    % Example:
+    %   11 - Red, Stereo
+    %   20 - Closer to you, No stereo
+    % For answer - 1 (Correct), 2 (Incorrect)
+    onsetTag = 0;
+    if strcmp(char(source.Type(trial)), "Red")
+        onsetTag = "1";
+    elseif strcmp(char(source.Type(trial)), "Closer to you")
+        onsetTag = "2";
+    elseif strcmp(char(source.Type(trial)), "Closer to yellow mark")
+        onsetTag = "3";
+    end
+    if strcmp(char(source.Stereo(trial)), "0")
+        onsetTag = onsetTag + "0";
+    else
+        onsetTag = onsetTag + "1";
+    end
+    
     % Send onset tag of scene
     try
-        sendtag(10);
+        sendtag(double(onsetTag))
     catch
         warning('Cannot send scene onset tag')
     end
     
     % Draw whole scene on screen
     arenaOnset = Screen('Flip', win);
+    if saveBuffer == true
+        imageArray = Screen('GetImage', win);
+        imageName = ['./images/img_', num2str(source.Repetition(trial)), '_', num2str(source.BlockRepetition(trial)), '_', num2str(trial), '_', source.Name{trial}, '.png'];
+        imwrite(imageArray, imageName);
+    end
     
     t = 1.5;
     rtMs = 0;
@@ -300,13 +333,14 @@ for trial = 1:height(source)
  
     % Append to logfile experiment variables
     try
-        fprintf(log, '%0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %s, %0.4f, %0.4f, %s, %d, %s, %d, %d, %s\n',...
+        fprintf(log, '%0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %0.4f, %s, %0.4f, %0.4f, %s, %d, %s, %d, %d, %s, %d\n',...
             source.RedX(trial), source.RedY(trial), source.RedZ(trial),...
             source.WhiteX(trial), source.WhiteY(trial),...
             source.WhiteZ(trial), source.Pitch(trial),...
             source.Roll(trial), source.Yaw(trial), resp,...
             rtMs, arenaOnset, source.Name{trial}, correctAnswer,...
-            blockAnswer, miss, responseTimestamp, char(source.Type(trial)));
+            blockAnswer, miss, responseTimestamp, char(source.Type(trial)),...
+            double(source.Stereo(trial))-1);
     catch
         sca;
         fclose(log);
