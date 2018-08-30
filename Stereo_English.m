@@ -15,7 +15,7 @@ function Stereo_English(subjectId, subjectSex, subjectAge)
 % 2017, Prague
 
 load src/source.mat;
-saveBuffer = true;
+saveBuffer = false;
 
 % Create subject logfile
 try
@@ -338,7 +338,8 @@ for trial = 1:height(source)
             source.WhiteZ(trial), source.Pitch(trial),...
             source.Roll(trial), source.Yaw(trial), resp,...
             rtMs, arenaOnset, source.Name{trial}, correctAnswer,...
-            blockAnswer, miss, responseTimestamp, char(source.Type(trial)));
+            blockAnswer, miss, responseTimestamp, char(source.Type(trial)),...
+            str2num(char(source.Stereo(trial))));
     catch
         sca;
         fclose(log);
