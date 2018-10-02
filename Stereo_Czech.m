@@ -17,6 +17,12 @@ function Stereo_Czech(subjectId, subjectSex, subjectAge)
 load src/source.mat;
 saveBuffer = false;
 
+% Initialize EEG
+close_ports();
+global eeg;
+eeg = serial('COM3', 'BAUD', 115200, 'DataBits', 8);
+fopen(eeg);
+
 % Create subject logfile
 try
     dateTimestamp = datestr(datetime);
@@ -351,6 +357,8 @@ end
 % Stop EEG recording
 sendtag(255);
 
+fclose(eeg);
+
 Screen('EndOpenGL', win);
 
 % Ending instructions
@@ -485,13 +493,20 @@ function sendtag(tag)
 % SENDTAG is communication function with Biosemi ActiveTwo
 % via serial port as emulator to paraller port.
 %
-    eeg = serial('COM3', 'BAUD', 115200, 'DataBits', 8);
-    fopen(eeg);
+    global eeg;
     try
         fwrite(eeg, tag);
-    catch ME
-        warning(strcat(ME, ' cannot write tag'));
-        fclose(eeg);
+    catch
+        warning('Cannot write tag');
     end
-    fclose(eeg);
+end
+
+function close_ports()
+% In any case the port stays open CLOSE_PORTS
+% shutdown all ports
+%
+     if ~isempty(instrfind)
+         fclose(instrfind);
+         delete(instrfind);
+     end
 end
